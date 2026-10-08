@@ -1,0 +1,92 @@
+<div class="flex-1 w-full overflow-y-auto pb-24 lg:pb-8">
+  <div class="p-4 sm:p-6 max-w-7xl mx-auto space-y-4">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">My Leaves</h1>
+      </div>
+      <div>
+        <button id="openApplyLeaveBtn" class="bg-[#7D53F6] hover:bg-[#6c42e6] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+          <i class="bx bx-plus text-lg"></i> Apply Leave
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
+      <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Search</label>
+      <div class="relative w-full sm:w-96">
+        <i class="bx bx-search absolute left-3 top-2.5 text-slate-400 text-lg"></i>
+        <input id="leavesSearchInput" type="text" placeholder="Search by leave type or remarks..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-primary placeholder:text-slate-400 transition-all">
+      </div>
+    </div>
+
+    <!-- Leaves Table Card -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="bg-slate-50/80 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none">
+              <th class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span>LEAVE TYPE</span>
+                  <i class="bx bx-filter-alt text-slate-400 cursor-pointer hover:text-primary filter-icon" data-col="leaveType" title="Filter by leave type"></i>
+                </div>
+              </th>
+              <th class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span>TYPE</span>
+                  <i class="bx bx-filter-alt text-slate-400 cursor-pointer hover:text-primary filter-icon" data-col="type" title="Filter by type"></i>
+                </div>
+              </th>
+              <th class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span>FROM DATE</span>
+                  <i class="bx bx-filter-alt text-slate-400 cursor-pointer hover:text-primary filter-icon" data-col="fromDate" title="Sort by from date"></i>
+                </div>
+              </th>
+              <th class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span>TO DATE</span>
+                  <i class="bx bx-filter-alt text-slate-400 cursor-pointer hover:text-primary filter-icon" data-col="toDate" title="Sort by to date"></i>
+                </div>
+              </th>
+              <th class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span>DURATION</span>
+                  <i class="bx bx-filter-alt text-slate-400 cursor-pointer hover:text-primary filter-icon" data-col="duration" title="Filter by duration"></i>
+                </div>
+              </th>
+              <th class="py-3.5 px-4">
+                <div class="flex items-center gap-1.5">
+                  <span>REMARKS</span>
+                  <i class="bx bx-filter-alt text-slate-400 cursor-pointer hover:text-primary filter-icon" data-col="remarks" title="Filter by remarks"></i>
+                </div>
+              </th>
+              <th class="py-3.5 px-4 text-center">PARENT STATUS</th>
+              <th class="py-3.5 px-4 text-center">STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="leavesTableBody" class="divide-y divide-slate-100">
+            <!-- Dynamic rows injected here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-slate-100 gap-3 text-xs text-slate-500 bg-slate-50/50">
+        <div id="leavesCountLabel">Showing 1 to 10 of 52 entries</div>
+        <div class="flex items-center gap-2">
+          <button id="prevLeavesPage" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+          <span id="leavesPageIndicator" class="px-2 font-medium text-slate-700">Page 1</span>
+          <button id="nextLeavesPage" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-600">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Support Button matching Screenshot -->
+  <button class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#7D53F6] hover:bg-[#6c42e6] text-white shadow-xl flex items-center justify-center hover:scale-105 transition-all z-30 cursor-pointer" onclick="showToast('Student Support & Wardens Desk connected.')" title="Student Support">
+    <i class="bx bx-headphone text-2xl"></i>
+  </button>
+</div>

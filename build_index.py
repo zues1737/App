@@ -33,13 +33,14 @@ html_content = f"""<!DOCTYPE html>
       background: #1e293b;
       color: white;
       padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.3);
       z-index: 10000;
       opacity: 0;
       transform: translateY(10px);
       transition: all 0.25s ease-in-out;
       pointer-events: none;
+      font-size: 0.875rem;
     }}
     .toast-msg.show {{
       opacity: 1;
@@ -65,7 +66,7 @@ html_content = f"""<!DOCTYPE html>
       </div>
 
       <!-- Sidebar Menu Items -->
-      <nav class="flex-1 flex flex-col items-center justify-center gap-7 w-full my-auto">
+      <nav class="flex-1 flex flex-col items-center justify-center gap-6 w-full my-auto">
         <div data-nav="dashboard" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white bg-primary text-white transition-all shadow-sm" title="Dashboard">
           <i class="bx bxs-dashboard" style="font-size: 26px;"></i>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">Dashboard</span>
@@ -84,6 +85,11 @@ html_content = f"""<!DOCTYPE html>
         <div data-nav="activity" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="PS Activity">
           <i class="bx bx-collection" style="font-size: 26px;"></i>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">PS Activity</span>
+        </div>
+
+        <div data-nav="leaves" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="My Leaves">
+          <i class="bx bxs-inbox" style="font-size: 26px;"></i>
+          <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">My Leaves</span>
         </div>
 
         <div data-nav="practice" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="Practice Courses">
@@ -124,7 +130,10 @@ html_content = f"""<!DOCTYPE html>
 
         <!-- Student Profile Pill -->
         <div id="profileBadge" class="flex gap-3 items-center bg-slate-50 hover:bg-slate-100 border border-slate-200/60 py-1.5 px-3 rounded-xl cursor-pointer transition-all select-none">
-          <div class="w-9 h-9 rounded-full bg-[#534AB7] text-white flex items-center justify-center font-bold text-xs ring-2 ring-violet-200">KS</div>
+          <div class="w-9 h-9 rounded-full bg-[#534AB7] text-white flex items-center justify-center font-bold text-xs ring-2 ring-violet-200 overflow-hidden">
+            <img src="./assets/images/2024UCS1132.jpg" alt="Profile" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            <span>KS</span>
+          </div>
           <div class="sm:flex hidden flex-col text-left">
             <h2 class="text-[12px] font-medium text-slate-500 leading-tight">2024UCS1132</h2>
             <h2 class="text-[14px] font-bold text-slate-900 leading-tight">KARTHIKEYAN S</h2>
@@ -167,7 +176,7 @@ html_content = f"""<!DOCTYPE html>
           <i class="bx bx-x text-2xl"></i>
         </button>
       </div>
-      <div id="modalBody" class="p-5 text-slate-600 text-sm leading-relaxed">
+      <div id="modalBody" class="p-5 text-slate-600 text-sm leading-relaxed max-h-[75vh] overflow-y-auto">
         <!-- Injected modal content -->
       </div>
       <div id="modalFooter" class="p-4 border-t border-slate-100 flex justify-end gap-2 bg-slate-50 rounded-b-2xl">
@@ -183,13 +192,180 @@ html_content = f"""<!DOCTYPE html>
   <script>
     const VIEWS = {views_js};
 
+    // Initial Leaves Data accurately matching screenshots
+    let leavesData = [
+      {{
+        id: 1,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Oct 1, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Oct 5, 2026",
+        toTime: "08:40 AM",
+        gateOut: "Oct 1, 2026, 05:10 PM",
+        gateIn: "Oct 4, 2026, 07:52 PM",
+        duration: "4 days",
+        remarks: "Leave",
+        parentStatus: "Pending",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 2,
+        leaveType: "GP",
+        type: "Leave",
+        fromDate: "Sep 24, 2026",
+        fromTime: "12:30 PM",
+        toDate: "Sep 30, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Sep 24, 2026, 02:38 PM",
+        gateIn: "Sep 29, 2026, 08:44 PM",
+        duration: "6 days",
+        remarks: "GP",
+        parentStatus: "Pending",
+        status: "Completed",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 3,
+        leaveType: "Sick Leave",
+        type: "Leave",
+        fromDate: "Sep 23, 2026",
+        fromTime: "08:30 AM",
+        toDate: "Sep 23, 2026",
+        toTime: "04:30 PM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "1 day",
+        remarks: "Stomach upset",
+        parentStatus: "Pending",
+        status: "Approved",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 4,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Sep 12, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Sep 15, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Sep 12, 2026, 05:00 PM",
+        gateIn: "Sep 15, 2026, 07:46 AM",
+        duration: "3 days",
+        remarks: "Leave",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 5,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Aug 22, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Aug 28, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Aug 22, 2026, 05:15 PM",
+        gateIn: "Aug 28, 2026, 07:22 AM",
+        duration: "6 days",
+        remarks: "Leave",
+        parentStatus: "Pending",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 6,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Aug 12, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Aug 17, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Aug 12, 2026, 05:20 PM",
+        gateIn: "Aug 16, 2026, 07:06 PM",
+        duration: "6 days",
+        remarks: "Leave",
+        parentStatus: "Pending",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 7,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Aug 12, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Aug 13, 2026",
+        toTime: "08:30 AM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "2 days",
+        remarks: "Leave",
+        parentStatus: "-",
+        status: "Rejected",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Rejected" }}
+      }},
+      {{
+        id: 8,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Aug 9, 2026",
+        fromTime: "08:30 AM",
+        toDate: "Aug 9, 2026",
+        toTime: "06:00 PM",
+        gateOut: "Aug 9, 2026, 09:10 AM",
+        gateIn: "Aug 9, 2026, 03:41 PM",
+        duration: "1 day",
+        remarks: "Leave",
+        parentStatus: "Pending",
+        status: "Completed",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 9,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Aug 8, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Aug 10, 2026",
+        toTime: "08:30 AM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "2 days",
+        remarks: "Leave",
+        parentStatus: "-",
+        status: "Rejected",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Rejected" }}
+      }},
+      {{
+        id: 10,
+        leaveType: "Sick Leave",
+        type: "Leave",
+        fromDate: "Aug 6, 2026",
+        fromTime: "08:30 AM",
+        toDate: "Aug 6, 2026",
+        toTime: "04:30 PM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "1 day",
+        remarks: "Fever",
+        parentStatus: "Pending",
+        status: "Approved",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }}
+    ];
+
     // Modal Controller
     const modal = document.getElementById("portalModal");
     const modalTitle = document.getElementById("modalTitle");
     const modalBody = document.getElementById("modalBody");
     const modalFooter = document.getElementById("modalFooter");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
-    const modalPrimaryBtn = document.getElementById("modalPrimaryBtn");
 
     function openModal(title, contentHtml, footerHtml = null) {{
       modalTitle.innerText = title;
@@ -197,7 +373,7 @@ html_content = f"""<!DOCTYPE html>
       if (footerHtml !== null) {{
         modalFooter.innerHTML = footerHtml;
       }} else {{
-        modalFooter.innerHTML = '<button onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-[#7D53F6] text-white hover:opacity-90">Close</button>';
+        modalFooter.innerHTML = '<button onclick="closeModal()" class="w-full py-2.5 rounded-xl font-semibold bg-[#7D53F6] hover:bg-[#6c42e6] text-white text-sm transition-all shadow-sm">Close</button>';
       }}
       modal.classList.add("active");
     }}
@@ -219,7 +395,7 @@ html_content = f"""<!DOCTYPE html>
       const toast = document.getElementById("toast");
       toast.innerText = msg;
       toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2600);
+      setTimeout(() => toast.classList.remove("show"), 3000);
     }}
 
     // Mobile Sidebar Drawer
@@ -264,27 +440,12 @@ html_content = f"""<!DOCTYPE html>
     }});
 
     // Mobile Bottom Bar Actions
-    document.querySelector('[data-mobile-action="leaves"]')?.addEventListener("click", () => openLeavesModal());
+    document.querySelector('[data-mobile-action="leaves"]')?.addEventListener("click", () => switchView("leaves"));
     document.querySelector('[data-mobile-action="pass"]')?.addEventListener("click", () => openMovementPassModal());
     document.querySelector('[data-mobile-action="customize"]')?.addEventListener("click", () => showToast("Widget customization is active. Drag cards to reorder."));
     document.querySelector('[data-mobile-nav="dashboard"]')?.addEventListener("click", () => switchView("dashboard"));
 
     // Quick Modals
-    function openLeavesModal() {{
-      openModal("My Leaves", `
-        <div class="p-2 space-y-3">
-          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-800 text-xs">
-            <strong>Leave Balance:</strong> 6 Days Available · 0 Pending Approvals
-          </div>
-          <p class="text-xs text-slate-600">You can apply for Medical Leave, OD (On Duty), or Casual Leave through this portal.</p>
-          <div class="grid grid-cols-2 gap-2 pt-2">
-            <button onclick="showToast('Leave application submitted for approval'); closeModal();" class="p-2.5 rounded-xl border border-emerald-300 bg-white hover:bg-emerald-50 text-emerald-700 font-semibold text-xs text-center transition-all">Apply OD</button>
-            <button onclick="showToast('Leave application submitted for approval'); closeModal();" class="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs text-center transition-all">Apply Casual Leave</button>
-          </div>
-        </div>
-      `);
-    }}
-
     function openMovementPassModal() {{
       openModal("Movement Pass", `
         <div class="p-2 text-center space-y-3">
@@ -401,6 +562,335 @@ html_content = f"""<!DOCTYPE html>
       `);
     }}
 
+    // ==========================================
+    // LEAVES SYSTEM CONTROLLERS (Matches Screenshots Exactly)
+    // ==========================================
+    function getStatusBadge(status) {{
+      if (status === "Completed") {{
+        return `<span class="bg-[#15803d] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Completed</span>`;
+      }}
+      if (status === "Approved") {{
+        return `<span class="bg-[#16a34a] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Approved</span>`;
+      }}
+      if (status === "Rejected") {{
+        return `<span class="bg-[#ef4444] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Rejected</span>`;
+      }}
+      return `<span class="bg-[#f59e0b] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Pending</span>`;
+    }}
+
+    function getParentStatusBadge(status) {{
+      if (status === "Pending") {{
+        return `<span class="bg-[#f59e0b] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Pending</span>`;
+      }}
+      if (status === "Approved") {{
+        return `<span class="bg-[#16a34a] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Approved</span>`;
+      }}
+      return `<span class="text-slate-400 font-medium">-</span>`;
+    }}
+
+    // Renders the Leaves Table
+    function renderLeavesTable(filterQuery = "") {{
+      const tbody = document.getElementById("leavesTableBody");
+      if (!tbody) return;
+
+      const q = filterQuery.toLowerCase().trim();
+      const filtered = leavesData.filter(l => {{
+        if (!q) return true;
+        return l.leaveType.toLowerCase().includes(q) ||
+               l.remarks.toLowerCase().includes(q) ||
+               l.status.toLowerCase().includes(q) ||
+               l.duration.toLowerCase().includes(q);
+      }});
+
+      if (filtered.length === 0) {{
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-400 text-sm">No leave records match your search criteria.</td></tr>`;
+        const countLabel = document.getElementById("leavesCountLabel");
+        if (countLabel) countLabel.innerText = "Showing 0 of 0 entries";
+        return;
+      }}
+
+      tbody.innerHTML = filtered.map(leave => `
+        <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer leave-row" data-id="${{leave.id}}">
+          <td class="py-3 px-4 font-medium text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+            <i class="bx bx-chevron-right text-slate-400 text-base"></i>
+            <span>${{leave.leaveType}}</span>
+          </td>
+          <td class="py-3 px-4 whitespace-nowrap">
+            <span class="bg-[#0284c7] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">${{leave.type}}</span>
+          </td>
+          <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${{leave.fromDate}}</td>
+          <td class="py-3 px-4 text-slate-600">
+            <div>${{leave.toDate}}</div>
+            ${{leave.gateIn && leave.gateIn !== "-" ? `<div class="text-[11px] text-slate-400 mt-0.5">(Gate In: ${{leave.gateIn}})</div>` : ''}}
+          </td>
+          <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${{leave.duration}}</td>
+          <td class="py-3 px-4 text-slate-600 whitespace-nowrap font-medium">${{leave.remarks}}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">${{getParentStatusBadge(leave.parentStatus)}}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">${{getStatusBadge(leave.status)}}</td>
+        </tr>
+      `).join("");
+
+      const countLabel = document.getElementById("leavesCountLabel");
+      if (countLabel) {{
+        countLabel.innerText = `Showing 1 to ${{filtered.length}} of ${{leavesData.length + 42}} entries`;
+      }}
+
+      // Attach row click to open Leave Details Modal
+      tbody.querySelectorAll(".leave-row").forEach(row => {{
+        row.addEventListener("click", () => {{
+          const id = Number(row.getAttribute("data-id"));
+          const item = leavesData.find(l => l.id === id);
+          if (item) openLeaveDetailsModal(item);
+        }});
+      }});
+    }}
+
+    // Open Leave Details Modal (Matches screenshots 2, 3, 4 exactly)
+    function openLeaveDetailsModal(leave) {{
+      const mentorApproval = leave.mentor ? `
+        <div class="border border-slate-200/90 rounded-2xl p-4 bg-white shadow-sm space-y-1">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-slate-800 text-sm">Mentor</span>
+            <span class="${{leave.mentor.status === 'Approved' ? 'bg-[#16a34a]' : (leave.mentor.status === 'Rejected' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]')}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm">${{leave.mentor.status}}</span>
+          </div>
+          <div class="text-xs text-slate-500 font-medium">${{leave.mentor.name}}</div>
+          <div class="text-xs text-slate-700 font-semibold pt-1">Approved by: <span class="font-normal text-slate-600">${{leave.mentor.name}}</span></div>
+        </div>
+      ` : '';
+
+      const wardenApproval = leave.warden ? `
+        <div class="border border-slate-200/90 rounded-2xl p-4 bg-white shadow-sm space-y-1">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-slate-800 text-sm">Hostel Warden</span>
+            <span class="${{leave.warden.status === 'Approved' ? 'bg-[#16a34a]' : (leave.warden.status === 'Rejected' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]')}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm">${{leave.warden.status}}</span>
+          </div>
+          <div class="text-xs text-slate-500 font-medium">${{leave.warden.name}}</div>
+          <div class="text-xs text-slate-700 font-semibold pt-1">Approved by: <span class="font-normal text-slate-600">${{leave.warden.name}}</span></div>
+        </div>
+      ` : '';
+
+      const content = `
+        <div class="space-y-4">
+          <!-- Leave Information Subtitle -->
+          <h4 class="text-sm font-bold text-slate-800 tracking-tight">Leave Information</h4>
+
+          <!-- Two-column grid -->
+          <div class="grid grid-cols-2 gap-y-3.5 gap-x-6 text-xs">
+            <div>
+              <span class="text-slate-500 block mb-0.5">Leave Type</span>
+              <span class="font-semibold text-slate-800 text-sm">${{leave.leaveType}}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block mb-0.5">Type</span>
+              <span class="bg-[#7D53F6] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">${{leave.type}}</span>
+            </div>
+
+            <div>
+              <span class="text-slate-500 block mb-0.5">From Date</span>
+              <span class="font-medium text-slate-800">${{leave.fromDate}}, ${{leave.fromTime}}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block mb-0.5">To Date</span>
+              <span class="font-medium text-slate-800">${{leave.toDate}}, ${{leave.toTime}}</span>
+            </div>
+
+            <div>
+              <span class="text-slate-500 block mb-0.5">Gate Out</span>
+              <span class="font-medium text-slate-800">${{leave.gateOut}}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block mb-0.5">Gate In</span>
+              <span class="font-medium text-slate-800">${{leave.gateIn}}</span>
+            </div>
+
+            <div>
+              <span class="text-slate-500 block mb-0.5">Duration</span>
+              <span class="font-medium text-slate-800">${{leave.duration}}</span>
+            </div>
+            <div>
+              <span class="text-slate-500 block mb-0.5">Status</span>
+              <span class="${{leave.status === 'Approved' || leave.status === 'Completed' ? 'bg-[#16a34a]' : (leave.status === 'Rejected' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]')}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">${{leave.status}}</span>
+            </div>
+
+            <div class="col-span-2">
+              <span class="text-slate-500 block mb-0.5">Remarks</span>
+              <span class="font-semibold text-slate-800">${{leave.remarks}}</span>
+            </div>
+          </div>
+
+          <!-- Approval Status Section -->
+          <div class="pt-2">
+            <h4 class="text-sm font-bold text-slate-800 tracking-tight mb-2.5">Approval Status</h4>
+            <div class="space-y-2.5">
+              ${{mentorApproval}}
+              ${{wardenApproval}}
+            </div>
+          </div>
+        </div>
+      `;
+
+      openModal(`Leave Details - ${{leave.leaveType}}`, content, `
+        <button onclick="closeModal()" class="w-full py-2.5 rounded-xl font-semibold bg-[#7D53F6] hover:bg-[#6c42e6] text-white text-sm transition-all shadow-sm">Close</button>
+      `);
+    }}
+
+    // Open Working Apply Leave Form Modal
+    function openApplyLeaveModal() {{
+      const todayIso = "2026-10-08T16:30";
+      const nextIso = "2026-10-12T08:30";
+
+      const content = `
+        <form id="applyLeaveForm" class="space-y-4 text-xs">
+          <div class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+            <div class="w-9 h-9 rounded-full bg-[#534AB7] text-white flex items-center justify-center font-bold text-xs ring-2 ring-violet-200">KS</div>
+            <div>
+              <div class="font-bold text-slate-800">KARTHIKEYAN S (2024UCS1132)</div>
+              <div class="text-[11px] text-slate-500">Computer Science & Engineering · III Year · Resident</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Leave Type <span class="text-red-500">*</span></label>
+              <select id="formLeaveType" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-primary font-medium">
+                <option value="Leave">Leave (Home / Casual Leave)</option>
+                <option value="Sick Leave">Sick Leave (Medical / Illness)</option>
+                <option value="GP">GP (Gate Pass / Day Outing)</option>
+                <option value="OD">OD (On Duty / Official)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Type Category</label>
+              <div class="py-2">
+                <span class="bg-[#0284c7] text-white text-xs px-3.5 py-1 rounded-full font-semibold shadow-sm">Leave</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">From Date & Time <span class="text-red-500">*</span></label>
+              <input type="datetime-local" id="formFromDate" value="${{todayIso}}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-primary font-medium">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">To Date & Time <span class="text-red-500">*</span></label>
+              <input type="datetime-local" id="formToDate" value="${{nextIso}}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-primary font-medium">
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between bg-violet-50/70 border border-violet-100 p-2.5 rounded-xl">
+            <span class="text-slate-600 font-medium">Calculated Duration:</span>
+            <span id="formDurationText" class="font-bold text-primary text-xs">4 days</span>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Remarks / Reason <span class="text-red-500">*</span></label>
+            <textarea id="formRemarks" rows="2" placeholder="Specify your reason for leave (e.g. Home visit, Medical rest, Family function)..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-primary placeholder:text-slate-400 font-sans"></textarea>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 text-[11px] space-y-1">
+            <div class="text-slate-500 font-bold mb-1 uppercase tracking-wider">Approval Routing Hierarchy:</div>
+            <div class="flex justify-between text-slate-700"><span>1. Faculty Mentor:</span><span class="font-semibold text-slate-800">CS10789 - Dhivya P</span></div>
+            <div class="flex justify-between text-slate-700"><span>2. Hostel Warden:</span><span class="font-semibold text-slate-800">ME11077 - josephsilvester</span></div>
+          </div>
+
+          <label class="flex items-start gap-2 text-xs text-slate-600 cursor-pointer pt-1">
+            <input type="checkbox" id="formConsentCheck" checked class="mt-0.5 rounded text-primary focus:ring-primary">
+            <span>Parent / Guardian has been communicated with and given full consent.</span>
+          </label>
+        </form>
+      `;
+
+      openModal("Apply Leave", content, `
+        <button onclick="closeModal()" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
+        <button id="submitLeaveBtn" type="button" class="px-5 py-2 rounded-xl text-xs font-semibold bg-[#7D53F6] hover:bg-[#6c42e6] text-white shadow-sm flex items-center gap-1.5 cursor-pointer">
+          <i class="bx bx-check text-base"></i> Submit Leave Application
+        </button>
+      `);
+
+      // Live duration calculation on date change
+      const fromEl = document.getElementById("formFromDate");
+      const toEl = document.getElementById("formToDate");
+      const durText = document.getElementById("formDurationText");
+
+      function updateDuration() {{
+        if (!fromEl || !toEl || !durText) return;
+        const d1 = new Date(fromEl.value);
+        const d2 = new Date(toEl.value);
+        if (isNaN(d1) || isNaN(d2) || d2 <= d1) {{
+          durText.innerText = "Invalid Date Range";
+          return;
+        }}
+        const diffMs = d2 - d1;
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        durText.innerText = `${{diffDays}} ${{diffDays === 1 ? 'day' : 'days'}}`;
+      }}
+
+      fromEl?.addEventListener("change", updateDuration);
+      toEl?.addEventListener("change", updateDuration);
+
+      // Handle Submit
+      document.getElementById("submitLeaveBtn")?.addEventListener("click", () => {{
+        const leaveType = document.getElementById("formLeaveType")?.value || "Leave";
+        const fromVal = document.getElementById("formFromDate")?.value;
+        const toVal = document.getElementById("formToDate")?.value;
+        const remarksVal = document.getElementById("formRemarks")?.value.trim();
+        const consent = document.getElementById("formConsentCheck")?.checked;
+
+        if (!remarksVal) {{
+          showToast("Please enter remarks / reason for your leave.");
+          document.getElementById("formRemarks")?.focus();
+          return;
+        }}
+        if (!consent) {{
+          showToast("Please confirm parent / guardian consent.");
+          return;
+        }}
+
+        const d1 = new Date(fromVal);
+        const d2 = new Date(toVal);
+        const diffDays = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+        const durationStr = `${{diffDays}} ${{diffDays === 1 ? 'day' : 'days'}}`;
+
+        const options = {{ month: 'short', day: 'numeric', year: 'numeric' }};
+        const fromFormattedDate = d1.toLocaleDateString('en-US', options);
+        const toFormattedDate = d2.toLocaleDateString('en-US', options);
+        const fromFormattedTime = d1.toLocaleTimeString('en-US', {{ hour: '2-digit', minute: '2-digit' }});
+        const toFormattedTime = d2.toLocaleTimeString('en-US', {{ hour: '2-digit', minute: '2-digit' }});
+
+        const newLeave = {{
+          id: Date.now(),
+          leaveType: leaveType,
+          type: "Leave",
+          fromDate: fromFormattedDate,
+          fromTime: fromFormattedTime,
+          toDate: toFormattedDate,
+          toTime: toFormattedTime,
+          gateOut: "-",
+          gateIn: "-",
+          duration: durationStr,
+          remarks: remarksVal,
+          parentStatus: "Pending",
+          status: "Pending",
+          mentor: {{ name: "CS10789 - Dhivya P", status: "Pending" }},
+          warden: {{ name: "ME11077 - josephsilvester", status: "Pending" }}
+        }};
+
+        // Add to leaves list at the beginning
+        leavesData.unshift(newLeave);
+
+        closeModal();
+        showToast(`✅ Leave application submitted! Notification sent to Mentor (CS10789 - Dhivya P).`);
+
+        // Re-render table if on leaves view
+        if (currentView === "leaves") {{
+          renderLeavesTable();
+        }} else {{
+          switchView("leaves");
+        }}
+      }});
+    }}
+
     // Switch View function
     let currentView = "dashboard";
     const container = document.getElementById("contentContainer");
@@ -446,6 +936,38 @@ html_content = f"""<!DOCTYPE html>
 
     // Bind Interactive Handlers
     function bindViewEvents(viewName) {{
+      if (viewName === "leaves") {{
+        renderLeavesTable();
+
+        // Apply Leave button click
+        document.getElementById("openApplyLeaveBtn")?.addEventListener("click", openApplyLeaveModal);
+
+        // Search input filter
+        const searchInput = document.getElementById("leavesSearchInput");
+        searchInput?.addEventListener("input", (e) => {{
+          renderLeavesTable(e.target.value);
+        }});
+
+        // Filter icons
+        container.querySelectorAll(".filter-icon").forEach(icon => {{
+          icon.addEventListener("click", (e) => {{
+            e.stopPropagation();
+            const col = icon.getAttribute("data-col");
+            openModal(`Filter by ${{col}}`, `
+              <div class="space-y-2 text-xs">
+                <button onclick="renderLeavesTable(''); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">All Records</button>
+                <button onclick="renderLeavesTable('Leave'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Leave Only</button>
+                <button onclick="renderLeavesTable('GP'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">GP Only</button>
+                <button onclick="renderLeavesTable('Sick Leave'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Sick Leave Only</button>
+                <button onclick="renderLeavesTable('Approved'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Approved Only</button>
+                <button onclick="renderLeavesTable('Completed'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Completed Only</button>
+                <button onclick="renderLeavesTable('Rejected'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Rejected Only</button>
+              </div>
+            `);
+          }});
+        }});
+      }}
+
       if (viewName === "dashboard") {{
         // Points breakdown clicks
         const buttons = container.querySelectorAll("button");
@@ -463,7 +985,7 @@ html_content = f"""<!DOCTYPE html>
         // Quick navigation buttons
         container.querySelectorAll('[data-dashboard-section="quickNav"] button').forEach(b => {{
           const t = b.innerText || "";
-          if (t.includes("My Leaves")) b.addEventListener("click", openLeavesModal);
+          if (t.includes("My Leaves")) b.addEventListener("click", () => switchView("leaves"));
           if (t.includes("Movement Pass")) b.addEventListener("click", openMovementPassModal);
           if (t.includes("Edit")) b.addEventListener("click", () => showToast("Quick Navigation reorder enabled"));
         }});
@@ -520,7 +1042,6 @@ html_content = f"""<!DOCTYPE html>
       }}
 
       if (viewName === "courses" || viewName === "my-course") {{
-        // Add Live Search Bar above courses
         const titleHeading = container.querySelector("h3.text-xl");
         if (titleHeading && !container.querySelector("#courseSearchBar")) {{
           const searchDiv = document.createElement("div");
@@ -565,7 +1086,7 @@ html_content = f"""<!DOCTYPE html>
           }});
         }}
 
-        // Clicking course cards
+        // Course card clicks
         container.querySelectorAll(".grid > div").forEach(card => {{
           card.addEventListener("click", () => {{
             const cTitle = card.querySelector("h3")?.innerText || "Course";
@@ -592,7 +1113,6 @@ html_content = f"""<!DOCTYPE html>
       }}
 
       if (viewName === "practice") {{
-        // Practice cards search
         const titleArea = container.querySelector(".mb-4");
         if (titleArea && !container.querySelector("#practiceSearchBar")) {{
           const pSearch = document.createElement("div");
@@ -616,7 +1136,6 @@ html_content = f"""<!DOCTYPE html>
           }});
         }}
 
-        // Practice card clicks
         container.querySelectorAll(".grid > div").forEach(card => {{
           card.addEventListener("click", () => {{
             const pTitle = card.querySelector("h3")?.innerText || "Practice Test";
@@ -642,12 +1161,11 @@ html_content = f"""<!DOCTYPE html>
       }}
 
       if (viewName === "activity" || viewName === "academics") {{
-        // Activity card clicks
         container.querySelectorAll(".group").forEach(card => {{
           card.addEventListener("click", () => {{
             const title = card.querySelector("h3")?.innerText || "Activity";
             if (title === "Movement Pass") openMovementPassModal();
-            else if (title === "My Leaves") openLeavesModal();
+            else if (title === "My Leaves") switchView("leaves");
             else {{
               openModal(title, `
                 <div class="space-y-3 text-xs">
@@ -664,7 +1182,6 @@ html_content = f"""<!DOCTYPE html>
           }});
         }});
 
-        // Activity search
         const actSearch = container.querySelector("input[placeholder*='Search activities']");
         if (actSearch) {{
           actSearch.addEventListener("input", (e) => {{
@@ -688,7 +1205,6 @@ html_content = f"""<!DOCTYPE html>
           }});
         }}
 
-        // Code review row clicks
         rows.forEach(row => {{
           row.addEventListener("click", () => {{
             const cells = row.querySelectorAll("td");
@@ -746,4 +1262,4 @@ html_content = f"""<!DOCTYPE html>
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print(f"Generated index.html successfully ({len(html_content)} bytes)")
+print(f"Generated index.html with My Leaves & Apply Leave successfully ({len(html_content)} bytes)")
