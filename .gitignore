@@ -3,3 +3,9 @@ node_modules
 *.log
 .env
 .env.local
+
+ref video/
+*.mp4
+*.pyc
+__pycache__/
+*.py
