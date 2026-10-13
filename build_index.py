@@ -3,7 +3,6 @@ import json, re
 with open("views_data.json", "r", encoding="utf-8") as f:
     views = json.load(f)
 
-# Helper to escape backticks and dollar signs for template literal or script inclusion
 def js_escape(s):
     return s.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
 
@@ -17,7 +16,7 @@ html_content = f"""<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PS Portal</title>
+  <title>PCDP Portal</title>
   <link rel="icon" href="./assets/images/logo.e99a8edb9e376c3ed2e5.png">
   <link rel="stylesheet" href="./assets/css/portal.css">
   <style>
@@ -28,13 +27,13 @@ html_content = f"""<!DOCTYPE html>
     }}
     .toast-msg {{
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
+      bottom: 5.5rem;
+      right: 1.5rem;
       background: #1e293b;
       color: white;
       padding: 0.75rem 1.25rem;
       border-radius: 0.75rem;
-      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px -3px rgba(0,0,0,0.3);
       z-index: 10000;
       opacity: 0;
       transform: translateY(10px);
@@ -46,6 +45,17 @@ html_content = f"""<!DOCTYPE html>
       opacity: 1;
       transform: translateY(0);
     }}
+    ::-webkit-scrollbar {{
+      width: 6px;
+      height: 6px;
+    }}
+    ::-webkit-scrollbar-thumb {{
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 9999px;
+    }}
+    ::-webkit-scrollbar-thumb:hover {{
+      background: rgba(148, 163, 184, 0.7);
+    }}
   </style>
 </head>
 <body class="bg-background text-slate-900 overflow-hidden font-sans">
@@ -54,7 +64,7 @@ html_content = f"""<!DOCTYPE html>
     <!-- Mobile Sidebar Drawer Backdrop -->
     <div id="mobileDrawerBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar Navigation (Desktop & Mobile Drawer) -->
     <aside id="appSidebar" class="no-print AppSidebar hidden md:flex fixed md:relative z-50 inset-y-0 left-0 w-max min-w-[5.5rem] bg-secondary flex-col items-center p-5 overflow-y-auto transition-transform duration-300">
       <div class="mb-4 flex items-center justify-between w-full md:justify-center">
         <a href="#dashboard" class="flex items-center gap-2">
@@ -65,8 +75,8 @@ html_content = f"""<!DOCTYPE html>
         </button>
       </div>
 
-      <!-- Sidebar Menu Items -->
-      <nav class="flex-1 flex flex-col items-center justify-center gap-6 w-full my-auto">
+      <!-- Sidebar Menu Items: Evenly distributed matching user layout -->
+      <nav class="flex-1 flex flex-col items-center justify-between w-full py-4">
         <div data-nav="dashboard" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white bg-primary text-white transition-all shadow-sm" title="Dashboard">
           <i class="bx bxs-dashboard" style="font-size: 26px;"></i>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">Dashboard</span>
@@ -82,14 +92,9 @@ html_content = f"""<!DOCTYPE html>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">My Course</span>
         </div>
 
-        <div data-nav="activity" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="PS Activity">
+        <div data-nav="activity" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="PS Activity / My Leaves">
           <i class="bx bx-collection" style="font-size: 26px;"></i>
-          <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">PS Activity</span>
-        </div>
-
-        <div data-nav="leaves" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="My Leaves">
-          <i class="bx bxs-inbox" style="font-size: 26px;"></i>
-          <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">My Leaves</span>
+          <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">PS Activity / Leaves</span>
         </div>
 
         <div data-nav="practice" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="Practice Courses">
@@ -98,7 +103,7 @@ html_content = f"""<!DOCTYPE html>
         </div>
 
         <div data-nav="academics" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all" title="Academics">
-          <i class="bx bx-education" style="font-size: 26px;"></i>
+          <i class="bx bxs-graduation" style="font-size: 26px;"></i>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">Academics</span>
         </div>
 
@@ -107,7 +112,7 @@ html_content = f"""<!DOCTYPE html>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-medium shadow-md whitespace-nowrap">Code Review</span>
         </div>
 
-        <div data-nav="logout" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-red-600 hover:text-white text-iconColor transition-all mt-auto" title="Logout">
+        <div data-nav="logout" class="nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-red-600 hover:text-white text-iconColor transition-all" title="Logout">
           <i class="bx bx-log-out" style="font-size: 26px;"></i>
           <span class="hidden md:group-hover:block z-50 fixed ml-[42px] px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-medium shadow-md whitespace-nowrap">Logout</span>
         </div>
@@ -116,29 +121,27 @@ html_content = f"""<!DOCTYPE html>
 
     <!-- Main Content Container -->
     <main class="flex-1 flex flex-col h-screen w-full overflow-hidden bg-background">
-      <!-- Top Navigation Bar -->
-      <header class="no-print w-full bg-white px-4 py-2.5 min-h-[4.25rem] flex items-center justify-between shadow-sm z-20 border-b border-slate-100">
+      <!-- Top Navigation Bar matching Video -->
+      <header class="no-print w-full bg-white px-4 py-2.5 min-h-[4rem] flex items-center justify-between shadow-sm z-20 border-b border-slate-100">
         <div class="flex gap-4 items-center">
           <button id="mobileMenuBtn" class="text-2xl text-slate-700 hover:text-primary cursor-pointer block md:hidden p-1 rounded-lg focus:outline-none" aria-label="Toggle menu">
             <i class="bx bx-menu text-3xl"></i>
           </button>
           <div class="flex items-center gap-2">
             <span class="font-bold text-lg tracking-tight text-slate-800">PCDP Portal</span>
-            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-violet-100 text-violet-800">v2.0</span>
           </div>
         </div>
 
-        <!-- Student Profile Pill -->
-        <div id="profileBadge" class="flex gap-3 items-center bg-slate-50 hover:bg-slate-100 border border-slate-200/60 py-1.5 px-3 rounded-xl cursor-pointer transition-all select-none">
-          <div class="w-9 h-9 rounded-full bg-[#534AB7] text-white flex items-center justify-center font-bold text-xs ring-2 ring-violet-200 overflow-hidden">
-            <img src="./assets/images/2024UCS1132.jpg" alt="Profile" class="w-full h-full object-cover" onerror="this.style.display='none'">
-            <span>KS</span>
+        <!-- Student Profile Card matching Video with real photo -->
+        <div id="profileBadge" class="flex gap-2.5 items-center bg-[#eff2fe] hover:bg-[#e4e8fc] border border-violet-100/80 py-1 px-2.5 rounded-xl cursor-pointer transition-all select-none">
+          <div class="w-8 h-8 rounded-full overflow-hidden bg-[#534AB7] flex items-center justify-center font-bold text-xs shadow-inner">
+            <img src="./assets/images/student_avatar.png" alt="Karthikeyan" class="w-full h-full object-cover">
           </div>
-          <div class="sm:flex hidden flex-col text-left">
-            <h2 class="text-[12px] font-medium text-slate-500 leading-tight">2024UCS1132</h2>
-            <h2 class="text-[14px] font-bold text-slate-900 leading-tight">KARTHIKEYAN S</h2>
+          <div class="sm:flex hidden flex-col text-left pr-1">
+            <h2 class="text-[11px] font-medium text-slate-500 leading-tight">2024UCS1132</h2>
+            <h2 class="text-[13px] font-bold text-slate-900 leading-tight">KARTHIKEYAN S</h2>
           </div>
-          <i class="bx bx-chevron-down text-slate-400 text-lg hidden sm:block"></i>
+          <i class="bx bx-chevron-down text-slate-400 text-base hidden sm:block"></i>
         </div>
       </header>
 
@@ -148,19 +151,29 @@ html_content = f"""<!DOCTYPE html>
       </div>
     </main>
 
-    <!-- Floating Mobile Bottom Bar -->
+    <!-- Floating Global Support / Audio Headphone Button matching Video -->
+    <!-- Portal Voice / Students Desk Floating Button at Bottom Right Corner -->
+    <button id="globalSupportBtn" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#7D53F6] hover:bg-[#6c42e6] text-white shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 cursor-pointer border-2 border-white/80" title="Portal Voice / Students Desk">
+      <i class="bx bx-headphone text-2xl"></i>
+    </button>
+
+    <!-- Floating Mobile Bottom Dock matching Video -->
     <div class="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
-      <div class="pointer-events-auto relative flex max-w-[min(100%,420px)] items-center gap-2 rounded-[1.75rem] border border-white/60 bg-white/95 px-3 py-2 shadow-[0_12px_40px_rgba(15,23,42,0.2)] backdrop-blur-xl">
+      <div class="pointer-events-auto relative flex max-w-[min(100%,420px)] items-center gap-2.5 rounded-[1.75rem] border border-white/80 bg-white/95 px-3.5 py-2 shadow-[0_12px_40px_rgba(15,23,42,0.18)] backdrop-blur-xl">
+        <!-- Dashboard Home Button -->
         <button type="button" data-mobile-nav="dashboard" title="Home" class="flex h-11 w-11 items-center justify-center rounded-2xl transition-transform active:scale-90" style="background-color: rgba(125, 83, 246, 0.12); color: rgb(125, 83, 246);">
           <i class="bx bxs-home text-[22px]"></i>
         </button>
-        <button type="button" data-mobile-action="leaves" title="My Leaves" class="flex h-11 w-11 items-center justify-center rounded-2xl transition-transform active:scale-90" style="background-color: rgb(225, 245, 238); color: rgb(15, 110, 86);">
+        <!-- Courses Available Button -->
+        <button type="button" data-mobile-nav="courses" title="Courses Available" class="flex h-11 w-11 items-center justify-center rounded-2xl transition-transform active:scale-90" style="background-color: rgb(225, 245, 238); color: rgb(15, 110, 86);">
           <i class="bx bxs-report text-[22px]"></i>
         </button>
-        <button type="button" data-mobile-action="pass" title="Movement Pass" class="flex h-11 w-11 items-center justify-center rounded-2xl transition-transform active:scale-90" style="background-color: rgb(230, 241, 251); color: rgb(24, 95, 165);">
+        <!-- Practice Courses Button -->
+        <button type="button" data-mobile-nav="practice" title="Practice Courses" class="flex h-11 w-11 items-center justify-center rounded-2xl transition-transform active:scale-90" style="background-color: rgb(230, 241, 251); color: rgb(24, 95, 165);">
           <i class="bx bx-walk text-[22px]"></i>
         </button>
-        <button type="button" data-mobile-action="customize" title="Customize" class="flex h-11 w-11 items-center justify-center rounded-2xl border border-dashed bg-white active:scale-90" style="border-color: rgba(125, 83, 246, 0.4); color: rgb(125, 83, 246);">
+        <!-- PS Activity / More Button with dashed border -->
+        <button type="button" data-mobile-nav="activity" title="PS Activity & Tools" class="flex h-11 w-11 items-center justify-center rounded-2xl border border-dashed bg-white active:scale-90" style="border-color: rgba(125, 83, 246, 0.5); color: rgb(125, 83, 246);">
           <i class="bx bx-plus text-2xl"></i>
         </button>
       </div>
@@ -192,7 +205,7 @@ html_content = f"""<!DOCTYPE html>
   <script>
     const VIEWS = {views_js};
 
-    // Initial Leaves Data accurately matching screenshots
+    // Full Leaves Dataset matching Video (31 entries)
     let leavesData = [
       {{
         id: 1,
@@ -232,7 +245,7 @@ html_content = f"""<!DOCTYPE html>
         leaveType: "Sick Leave",
         type: "Leave",
         fromDate: "Sep 23, 2026",
-        fromTime: "08:30 AM",
+        fromTime: "01:00 PM",
         toDate: "Sep 23, 2026",
         toTime: "04:30 PM",
         gateOut: "-",
@@ -357,8 +370,407 @@ html_content = f"""<!DOCTYPE html>
         parentStatus: "Pending",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 11,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Jul 26, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Jul 30, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Jul 26, 2026, 05:00 PM",
+        gateIn: "Jul 29, 2026, 08:15 PM",
+        duration: "4 days",
+        remarks: "Home visit",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 12,
+        leaveType: "GP",
+        type: "Leave",
+        fromDate: "Jul 18, 2026",
+        fromTime: "01:00 PM",
+        toDate: "Jul 18, 2026",
+        toTime: "07:30 PM",
+        gateOut: "Jul 18, 2026, 01:10 PM",
+        gateIn: "Jul 18, 2026, 06:40 PM",
+        duration: "1 day",
+        remarks: "Outing",
+        parentStatus: "Pending",
+        status: "Completed",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 13,
+        leaveType: "OnDuty - NPTEL Exam",
+        type: "Leave",
+        fromDate: "Jul 10, 2026",
+        fromTime: "08:00 AM",
+        toDate: "Jul 10, 2026",
+        toTime: "06:00 PM",
+        gateOut: "Jul 10, 2026, 08:15 AM",
+        gateIn: "Jul 10, 2026, 05:20 PM",
+        duration: "1 day",
+        remarks: "Exam Center: Coimbatore",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 14,
+        leaveType: "Sick Leave",
+        type: "Leave",
+        fromDate: "Jun 28, 2026",
+        fromTime: "09:00 AM",
+        toDate: "Jun 28, 2026",
+        toTime: "04:30 PM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "1 day",
+        remarks: "Severe headache",
+        parentStatus: "Pending",
+        status: "Approved",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 15,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Jun 15, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Jun 20, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Jun 15, 2026, 05:10 PM",
+        gateIn: "Jun 19, 2026, 08:30 PM",
+        duration: "5 days",
+        remarks: "Leave",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 16,
+        leaveType: "GP",
+        type: "Leave",
+        fromDate: "Jun 05, 2026",
+        fromTime: "02:00 PM",
+        toDate: "Jun 05, 2026",
+        toTime: "08:00 PM",
+        gateOut: "Jun 05, 2026, 02:15 PM",
+        gateIn: "Jun 05, 2026, 07:45 PM",
+        duration: "1 day",
+        remarks: "GP Outing",
+        parentStatus: "Pending",
+        status: "Completed",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 17,
+        leaveType: "Emergency Leave",
+        type: "Leave",
+        fromDate: "May 20, 2026",
+        fromTime: "11:00 AM",
+        toDate: "May 24, 2026",
+        toTime: "08:30 AM",
+        gateOut: "May 20, 2026, 11:45 AM",
+        gateIn: "May 23, 2026, 07:15 PM",
+        duration: "4 days",
+        remarks: "Family emergency",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 18,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "May 10, 2026",
+        fromTime: "04:30 PM",
+        toDate: "May 12, 2026",
+        toTime: "08:30 AM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "2 days",
+        remarks: "Personal",
+        parentStatus: "-",
+        status: "Rejected",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Rejected" }}
+      }},
+      {{
+        id: 19,
+        leaveType: "OnDuty - Sports",
+        type: "Leave",
+        fromDate: "Apr 25, 2026",
+        fromTime: "07:00 AM",
+        toDate: "Apr 26, 2026",
+        toTime: "08:00 PM",
+        gateOut: "Apr 25, 2026, 07:15 AM",
+        gateIn: "Apr 26, 2026, 07:30 PM",
+        duration: "2 days",
+        remarks: "Zonal Tournament",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 20,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Apr 12, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Apr 16, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Apr 12, 2026, 05:00 PM",
+        gateIn: "Apr 15, 2026, 08:20 PM",
+        duration: "4 days",
+        remarks: "Tamil New Year Holiday",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 21,
+        leaveType: "Sick Leave",
+        type: "Leave",
+        fromDate: "Apr 02, 2026",
+        fromTime: "09:00 AM",
+        toDate: "Apr 02, 2026",
+        toTime: "05:00 PM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "1 day",
+        remarks: "Clinic rest",
+        parentStatus: "Pending",
+        status: "Approved",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 22,
+        leaveType: "GP",
+        type: "Leave",
+        fromDate: "Mar 22, 2026",
+        fromTime: "01:30 PM",
+        toDate: "Mar 22, 2026",
+        toTime: "07:30 PM",
+        gateOut: "Mar 22, 2026, 01:45 PM",
+        gateIn: "Mar 22, 2026, 07:10 PM",
+        duration: "1 day",
+        remarks: "GP Outing",
+        parentStatus: "Pending",
+        status: "Completed",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 23,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Mar 10, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Mar 14, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Mar 10, 2026, 05:10 PM",
+        gateIn: "Mar 13, 2026, 07:50 PM",
+        duration: "4 days",
+        remarks: "Leave",
+        parentStatus: "Pending",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 24,
+        leaveType: "OnDuty - Offcampus Placement",
+        type: "Leave",
+        fromDate: "Feb 27, 2026",
+        fromTime: "07:30 AM",
+        toDate: "Feb 28, 2026",
+        toTime: "06:30 PM",
+        gateOut: "Feb 27, 2026, 07:45 AM",
+        gateIn: "Feb 28, 2026, 06:15 PM",
+        duration: "2 days",
+        remarks: "Hackathon Finals",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 25,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Feb 14, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Feb 17, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Feb 14, 2026, 05:20 PM",
+        gateIn: "Feb 16, 2026, 08:10 PM",
+        duration: "3 days",
+        remarks: "Leave",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 26,
+        leaveType: "Sick Leave",
+        type: "Leave",
+        fromDate: "Feb 05, 2026",
+        fromTime: "08:30 AM",
+        toDate: "Feb 05, 2026",
+        toTime: "04:30 PM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "1 day",
+        remarks: "Dental appointment",
+        parentStatus: "Pending",
+        status: "Approved",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 27,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Jan 24, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Jan 27, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Jan 24, 2026, 05:05 PM",
+        gateIn: "Jan 26, 2026, 07:40 PM",
+        duration: "3 days",
+        remarks: "Republic Day Long Weekend",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 28,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Jan 12, 2026",
+        fromTime: "04:30 PM",
+        toDate: "Jan 19, 2026",
+        toTime: "08:30 AM",
+        gateOut: "Jan 12, 2026, 05:15 PM",
+        gateIn: "Jan 18, 2026, 08:30 PM",
+        duration: "7 days",
+        remarks: "Pongal Vacation",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 29,
+        leaveType: "GP",
+        type: "Leave",
+        fromDate: "Jan 03, 2026",
+        fromTime: "01:00 PM",
+        toDate: "Jan 03, 2026",
+        toTime: "07:00 PM",
+        gateOut: "Jan 03, 2026, 01:15 PM",
+        gateIn: "Jan 03, 2026, 06:50 PM",
+        duration: "1 day",
+        remarks: "Shopping",
+        parentStatus: "Pending",
+        status: "Completed",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 30,
+        leaveType: "Leave",
+        type: "Leave",
+        fromDate: "Dec 23, 2025",
+        fromTime: "04:30 PM",
+        toDate: "Dec 28, 2025",
+        toTime: "08:30 AM",
+        gateOut: "Dec 23, 2025, 05:00 PM",
+        gateIn: "Dec 27, 2025, 07:30 PM",
+        duration: "5 days",
+        remarks: "Winter break",
+        parentStatus: "Approved",
+        status: "Completed",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
+      }},
+      {{
+        id: 31,
+        leaveType: "Sick Leave",
+        type: "Leave",
+        fromDate: "Dec 10, 2025",
+        fromTime: "08:30 AM",
+        toDate: "Dec 10, 2025",
+        toTime: "04:30 PM",
+        gateOut: "-",
+        gateIn: "-",
+        duration: "1 day",
+        remarks: "Cold & viral fever",
+        parentStatus: "Pending",
+        status: "Approved",
+        warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }}
     ];
+
+    let leavesCurrentPage = 1;
+    let leavesPageSize = 10;
+    let leavesSearchFilter = "";
+
+    // Code Review Rubric Database matching Video (Frames 55 & 36)
+    const reviewData = {{
+      "HTML / CSS - Level 1": {{
+        slot: "06 Jan 2026 (01:30 pm - 03:20 pm)",
+        justification: "grid layout little bit different , media query not applied",
+        rubrics: [
+          {{ label: "Code Quality", score: "30/40" }},
+          {{ label: "Key Requirements", score: "20/25" }},
+          {{ label: "Expected Output", score: "30/35" }}
+        ]
+      }},
+      "Programming C++ - Level 3": {{
+        slot: "10 Aug 2026 (11:20 am - 12:20 pm)",
+        justification: "The program works for most cases, but the logic for handling duplicate scores needs correction. While determining the first, second, and third largest values, duplicate elements must be ignored. Ensure that ranking is based only on distinct values, so repeated scores do not occupy multiple ranking positions.",
+        rubrics: [
+          {{ label: "Pass Mark", score: "0/50" }}
+        ]
+      }},
+      "Java Script - Level 1": {{
+        slot: "05 Mar 2026 (08:45 am - 10:25 am)",
+        justification: "All DOM manipulation test cases passed. Excellent logic structure and clean variable naming conventions.",
+        rubrics: [
+          {{ label: "Code Quality", score: "35/40" }},
+          {{ label: "Key Requirements", score: "25/25" }},
+          {{ label: "Expected Output", score: "35/35" }}
+        ]
+      }},
+      "Programming C++ Level - 1": {{
+        slot: "17 Feb 2026 (01:30 pm - 02:40 pm)",
+        justification: "Output not printed properly for cases where the cost exceeds 30.",
+        rubrics: [
+          {{ label: "Code Quality", score: "25/40" }},
+          {{ label: "Key Requirements", score: "20/25" }},
+          {{ label: "Expected Output", score: "15/35" }}
+        ]
+      }},
+      "C Programming Level - 4": {{
+        slot: "03 Mar 2025 (10:30 am - 11:30 am)",
+        justification: "Reverse logic not working for rounded sum(i.e 30,50)",
+        rubrics: [
+          {{ label: "Code Quality", score: "20/40" }},
+          {{ label: "Key Requirements", score: "18/25" }},
+          {{ label: "Expected Output", score: "22/35" }}
+        ]
+      }}
+    }};
 
     // Modal Controller
     const modal = document.getElementById("portalModal");
@@ -395,8 +807,45 @@ html_content = f"""<!DOCTYPE html>
       const toast = document.getElementById("toast");
       toast.innerText = msg;
       toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3000);
+      setTimeout(() => toast.classList.remove("show"), 3200);
     }}
+
+    // Portal Voice / Students Desk Floating Button Handler
+    document.getElementById("globalSupportBtn")?.addEventListener("click", () => {{
+      openModal("Portal Voice / Students Desk", `
+        <div class="space-y-4 text-xs text-slate-600">
+          <div class="flex items-center gap-3.5 p-3.5 bg-violet-50 rounded-2xl border border-violet-100">
+            <div class="w-12 h-12 rounded-2xl bg-[#7D53F6] text-white flex items-center justify-center text-2xl shadow-md">
+              <i class="bx bx-headphone"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm">Portal Voice & Students Desk</h4>
+              <p class="text-[11px] text-slate-500">24/7 Student Grievance & Academic Support</p>
+            </div>
+          </div>
+          <div class="space-y-2.5 border-t border-slate-100 pt-3 text-xs">
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">Hostel Care Desk:</span>
+              <span class="font-mono text-primary font-bold">Ext: 4402 / 4405</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">PCDP Assessment Help:</span>
+              <span class="font-mono text-primary font-bold">pcdp-support@bitsathy.ac.in</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">Assigned Faculty Mentor:</span>
+              <span class="font-medium text-slate-800">CS10789 - Dhivya P</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-medium text-slate-700">Chief Hostel Warden:</span>
+              <span class="font-medium text-slate-800">ME11077 - josephsilvester</span>
+            </div>
+          </div>
+        </div>
+      `, `
+        <button onclick="closeModal()" class="w-full py-2.5 rounded-xl font-semibold bg-[#7D53F6] hover:bg-[#6c42e6] text-white text-sm transition-all shadow-sm cursor-pointer">Close</button>
+      `);
+    }});
 
     // Mobile Sidebar Drawer
     const mobileMenuBtn = document.getElementById("mobileMenuBtn");
@@ -422,9 +871,14 @@ html_content = f"""<!DOCTYPE html>
     document.getElementById("profileBadge")?.addEventListener("click", () => {{
       openModal("Student Profile", `
         <div class="flex items-center gap-4 mb-4">
-          <div class="w-16 h-16 rounded-full bg-[#534AB7] text-white flex items-center justify-center font-bold text-xl shadow-md">KS</div>
+          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-[#534AB7] shadow-md">
+            <img src="./assets/images/student_avatar.png" alt="Profile" class="w-full h-full object-cover">
+          </div>
           <div>
-            <h4 class="text-base font-bold text-slate-900">KARTHIKEYAN S</h4>
+            <div class="flex items-center gap-1.5">
+              <h4 class="text-base font-bold text-slate-900">KARTHIKEYAN S</h4>
+              <i class="bx bxs-badge-check text-primary text-base"></i>
+            </div>
             <div class="text-xs text-slate-500 font-mono mt-0.5">Roll No: 2024UCS1132</div>
             <div class="text-xs text-slate-500 font-mono">Reg No: 7376241CS231</div>
           </div>
@@ -432,18 +886,21 @@ html_content = f"""<!DOCTYPE html>
         <div class="space-y-2 border-t border-slate-100 pt-3 text-xs">
           <div class="flex justify-between py-1 border-b border-slate-50"><span class="text-slate-500">Department</span><span class="font-medium text-slate-800">Computer Science and Engineering</span></div>
           <div class="flex justify-between py-1 border-b border-slate-50"><span class="text-slate-500">Current Year</span><span class="font-medium text-slate-800">III Year</span></div>
+          <div class="flex justify-between py-1 border-b border-slate-50"><span class="text-slate-500">Mobile Number</span><span class="font-mono text-slate-800">9944963680</span></div>
           <div class="flex justify-between py-1 border-b border-slate-50"><span class="text-slate-500">Student Group</span><span class="font-bold text-[#534AB7]">B#078</span></div>
-          <div class="flex justify-between py-1 border-b border-slate-50"><span class="text-slate-500">Skill Community</span><span class="font-medium text-slate-800">Big Data Analytics & Machine Learning (Sec 2)</span></div>
+          <div class="flex justify-between py-1 border-b border-slate-50"><span class="text-slate-500">Skill Community</span><span class="font-medium text-slate-800">Big Data Analytics and machine learning - Section 2</span></div>
           <div class="flex justify-between py-1"><span class="text-slate-500">Learning Mode</span><span class="font-medium text-slate-800">Project-Based Learning Mode</span></div>
         </div>
       `);
     }});
 
-    // Mobile Bottom Bar Actions
-    document.querySelector('[data-mobile-action="leaves"]')?.addEventListener("click", () => switchView("leaves"));
-    document.querySelector('[data-mobile-action="pass"]')?.addEventListener("click", () => openMovementPassModal());
-    document.querySelector('[data-mobile-action="customize"]')?.addEventListener("click", () => showToast("Widget customization is active. Drag cards to reorder."));
-    document.querySelector('[data-mobile-nav="dashboard"]')?.addEventListener("click", () => switchView("dashboard"));
+    // Mobile Bottom Dock Navigation
+    document.querySelectorAll("[data-mobile-nav]").forEach(btn => {{
+      btn.addEventListener("click", () => {{
+        const target = btn.getAttribute("data-mobile-nav");
+        switchView(target);
+      }});
+    }});
 
     // Quick Modals
     function openMovementPassModal() {{
@@ -468,7 +925,7 @@ html_content = f"""<!DOCTYPE html>
         <div class="space-y-4">
           <div class="flex items-center justify-between bg-[#EEEDFE] p-4 rounded-xl">
             <div>
-              <div class="text-2xl font-bold text-[#534AB7]">46,690</div>
+              <div class="text-2xl font-bold text-[#534AB7]">47,730</div>
               <div class="text-xs font-semibold text-[#534AB7]">Total Activity Points</div>
             </div>
             <div class="text-right">
@@ -484,8 +941,8 @@ html_content = f"""<!DOCTYPE html>
                 <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-indigo-600 h-2 rounded-full" style="width: 40%"></div></div>
               </div>
               <div>
-                <div class="flex justify-between mb-1"><span class="text-slate-600">Weekly Assessments & Practice</span><span class="font-bold text-slate-800">15,200 pts</span></div>
-                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-violet-500 h-2 rounded-full" style="width: 32%"></div></div>
+                <div class="flex justify-between mb-1"><span class="text-slate-600">Weekly Assessments & Practice</span><span class="font-bold text-slate-800">16,240 pts</span></div>
+                <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-violet-500 h-2 rounded-full" style="width: 34%"></div></div>
               </div>
               <div>
                 <div class="flex justify-between mb-1"><span class="text-slate-600">S5 Mini Projects & Innovations</span><span class="font-bold text-slate-800">8,500 pts</span></div>
@@ -495,14 +952,6 @@ html_content = f"""<!DOCTYPE html>
                 <div class="flex justify-between mb-1"><span class="text-slate-600">Core Engineering Assessments</span><span class="font-bold text-slate-800">4,590 pts</span></div>
                 <div class="w-full bg-slate-100 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" style="width: 10%"></div></div>
               </div>
-            </div>
-          </div>
-          <div class="border-t border-slate-100 pt-3">
-            <h5 class="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Recent Transactions</h5>
-            <div class="space-y-1.5 text-xs text-slate-600">
-              <div class="flex justify-between p-2 rounded-lg bg-slate-50"><span>August GP challenge 2026 Milestone</span><span class="font-bold text-emerald-600">+1,200 AP</span></div>
-              <div class="flex justify-between p-2 rounded-lg bg-slate-50"><span>Placement Weekly Assessment (Week 1)</span><span class="font-bold text-emerald-600">+800 AP</span></div>
-              <div class="flex justify-between p-2 rounded-lg bg-slate-50"><span>Data Science Practice Assessment</span><span class="font-bold text-emerald-600">+450 AP</span></div>
             </div>
           </div>
         </div>
@@ -521,10 +970,6 @@ html_content = f"""<!DOCTYPE html>
           </div>
           <div class="text-xs space-y-2 text-slate-600">
             <p>Opportunity Points reflect your eligibility priority for high-value campus placement drives, super-dream offers, and industry internships.</p>
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-              <div class="flex justify-between"><span class="text-slate-500">Tier 1 Drives Required:</span><span class="font-bold text-slate-800">400 OP (Achieved)</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Dream Offer Multiplier:</span><span class="font-bold text-slate-800">1.25x</span></div>
-            </div>
           </div>
         </div>
       `);
@@ -535,15 +980,10 @@ html_content = f"""<!DOCTYPE html>
         <div class="space-y-4">
           <div class="flex items-center justify-between p-4 rounded-xl" style="background: rgb(225, 245, 238);">
             <div>
-              <div class="text-2xl font-bold" style="color: rgb(15, 110, 86);">83 / 100</div>
+              <div class="text-2xl font-bold" style="color: rgb(15, 110, 86);">84 / 100</div>
               <div class="text-xs font-semibold" style="color: rgb(15, 110, 86);">Platform Responsiveness Score</div>
             </div>
             <span class="text-xs font-bold px-2 py-1 rounded bg-emerald-600 text-white">Top 10%</span>
-          </div>
-          <div class="text-xs space-y-2 text-slate-600">
-            <div class="flex justify-between py-1 border-b border-slate-100"><span>Survey Response Speed:</span><span class="font-semibold text-slate-800">92%</span></div>
-            <div class="flex justify-between py-1 border-b border-slate-100"><span>Assessment Punctuality:</span><span class="font-semibold text-slate-800">86%</span></div>
-            <div class="flex justify-between py-1"><span>Daily Commitment Check-in:</span><span class="font-semibold text-slate-800">79%</span></div>
           </div>
         </div>
       `);
@@ -563,7 +1003,7 @@ html_content = f"""<!DOCTYPE html>
     }}
 
     // ==========================================
-    // LEAVES SYSTEM CONTROLLERS (Matches Screenshots Exactly)
+    // LEAVES SYSTEM (Exact Video Replication)
     // ==========================================
     function getStatusBadge(status) {{
       if (status === "Completed") {{
@@ -588,12 +1028,11 @@ html_content = f"""<!DOCTYPE html>
       return `<span class="text-slate-400 font-medium">-</span>`;
     }}
 
-    // Renders the Leaves Table
-    function renderLeavesTable(filterQuery = "") {{
+    function renderLeavesTable() {{
       const tbody = document.getElementById("leavesTableBody");
       if (!tbody) return;
 
-      const q = filterQuery.toLowerCase().trim();
+      const q = leavesSearchFilter.toLowerCase().trim();
       const filtered = leavesData.filter(l => {{
         if (!q) return true;
         return l.leaveType.toLowerCase().includes(q) ||
@@ -602,40 +1041,88 @@ html_content = f"""<!DOCTYPE html>
                l.duration.toLowerCase().includes(q);
       }});
 
-      if (filtered.length === 0) {{
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-slate-400 text-sm">No leave records match your search criteria.</td></tr>`;
-        const countLabel = document.getElementById("leavesCountLabel");
-        if (countLabel) countLabel.innerText = "Showing 0 of 0 entries";
-        return;
+      const totalItems = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(totalItems / leavesPageSize));
+      if (leavesCurrentPage > totalPages) leavesCurrentPage = totalPages;
+
+      const startIdx = (leavesCurrentPage - 1) * leavesPageSize;
+      const endIdx = Math.min(startIdx + leavesPageSize, totalItems);
+      const pageSlice = filtered.slice(startIdx, endIdx);
+
+      if (pageSlice.length === 0) {{
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400 text-sm">No leave records match your search criteria.</td></tr>`;
+      }} else {{
+        tbody.innerHTML = pageSlice.map(leave => `
+          <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer leave-row" data-id="${{leave.id}}">
+            <td class="py-3 px-4 font-medium text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
+              <i class="bx bx-chevron-right text-slate-400 text-base"></i>
+              <span>${{leave.leaveType}}</span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">
+              <span class="bg-[#0284c7] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">${{leave.type}}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${{leave.fromDate}}</td>
+            <td class="py-3 px-4 text-slate-600 whitespace-nowrap font-medium">${{leave.remarks}}</td>
+            <td class="py-3 px-4 text-center whitespace-nowrap">${{getParentStatusBadge(leave.parentStatus)}}</td>
+            <td class="py-3 px-4 text-center whitespace-nowrap">${{getStatusBadge(leave.status)}}</td>
+          </tr>
+        `).join("");
       }}
 
-      tbody.innerHTML = filtered.map(leave => `
-        <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer leave-row" data-id="${{leave.id}}">
-          <td class="py-3 px-4 font-medium text-slate-800 flex items-center gap-1.5 whitespace-nowrap">
-            <i class="bx bx-chevron-right text-slate-400 text-base"></i>
-            <span>${{leave.leaveType}}</span>
-          </td>
-          <td class="py-3 px-4 whitespace-nowrap">
-            <span class="bg-[#0284c7] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">${{leave.type}}</span>
-          </td>
-          <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${{leave.fromDate}}</td>
-          <td class="py-3 px-4 text-slate-600">
-            <div>${{leave.toDate}}</div>
-            ${{leave.gateIn && leave.gateIn !== "-" ? `<div class="text-[11px] text-slate-400 mt-0.5">(Gate In: ${{leave.gateIn}})</div>` : ''}}
-          </td>
-          <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${{leave.duration}}</td>
-          <td class="py-3 px-4 text-slate-600 whitespace-nowrap font-medium">${{leave.remarks}}</td>
-          <td class="py-3 px-4 text-center whitespace-nowrap">${{getParentStatusBadge(leave.parentStatus)}}</td>
-          <td class="py-3 px-4 text-center whitespace-nowrap">${{getStatusBadge(leave.status)}}</td>
-        </tr>
-      `).join("");
-
+      // Count label matching Video
       const countLabel = document.getElementById("leavesCountLabel");
       if (countLabel) {{
-        countLabel.innerText = `Showing 1 to ${{filtered.length}} of ${{leavesData.length + 42}} entries`;
+        if (totalItems === 0) {{
+          countLabel.innerText = "Showing 0 of 0 entries";
+        }} else {{
+          countLabel.innerText = `Showing ${{startIdx + 1}} to ${{endIdx}} of ${{totalItems}} entries`;
+        }}
       }}
 
-      // Attach row click to open Leave Details Modal
+      // Pagination buttons matching Video
+      const paginContainer = document.getElementById("leavesPaginationButtons");
+      if (paginContainer) {{
+        let paginHtml = `
+          <button id="prevLeavesPage" ${{leavesCurrentPage <= 1 ? 'disabled' : ''}} class="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed">Previous</button>
+        `;
+
+        for (let p = 1; p <= totalPages; p++) {{
+          if (p === leavesCurrentPage) {{
+            paginHtml += `<button class="w-7 h-7 rounded-lg bg-[#5b50e6] text-white font-bold text-xs shadow-sm">${{p}}</button>`;
+          }} else {{
+            paginHtml += `<button data-page="${{p}}" class="w-7 h-7 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-medium text-xs leaves-page-btn">${{p}}</button>`;
+          }}
+        }}
+
+        paginHtml += `
+          <button id="nextLeavesPage" ${{leavesCurrentPage >= totalPages ? 'disabled' : ''}} class="px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed">Next</button>
+        `;
+
+        paginContainer.innerHTML = paginHtml;
+
+        document.getElementById("prevLeavesPage")?.addEventListener("click", () => {{
+          if (leavesCurrentPage > 1) {{
+            leavesCurrentPage--;
+            renderLeavesTable();
+          }}
+        }});
+
+        document.getElementById("nextLeavesPage")?.addEventListener("click", () => {{
+          if (leavesCurrentPage < totalPages) {{
+            leavesCurrentPage++;
+            renderLeavesTable();
+          }}
+        }});
+
+        paginContainer.querySelectorAll(".leaves-page-btn").forEach(btn => {{
+          btn.addEventListener("click", () => {{
+            leavesCurrentPage = Number(btn.getAttribute("data-page"));
+            renderLeavesTable();
+          }});
+        }});
+      }}
+
+      // Attach row click to open Leave Details Modal matching Frame 32 & 22
       tbody.querySelectorAll(".leave-row").forEach(row => {{
         row.addEventListener("click", () => {{
           const id = Number(row.getAttribute("data-id"));
@@ -645,36 +1132,53 @@ html_content = f"""<!DOCTYPE html>
       }});
     }}
 
-    // Open Leave Details Modal (Matches screenshots 2, 3, 4 exactly)
+    // Open Leave Details Modal matching Frame 32 & 22
     function openLeaveDetailsModal(leave) {{
-      const mentorApproval = leave.mentor ? `
-        <div class="border border-slate-200/90 rounded-2xl p-4 bg-white shadow-sm space-y-1">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-bold text-slate-800 text-sm">Mentor</span>
-            <span class="${{leave.mentor.status === 'Approved' ? 'bg-[#16a34a]' : (leave.mentor.status === 'Rejected' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]')}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm">${{leave.mentor.status}}</span>
+      let approvalHtml = '';
+      if (leave.status === "Pending") {{
+        approvalHtml = `
+          <div class="text-center py-6 text-slate-500">
+            <i class="bx bx-time text-4xl text-slate-400 mb-2 inline-block animate-pulse"></i>
+            <p class="text-xs font-medium text-slate-600">Approval workflow is being processed...</p>
           </div>
-          <div class="text-xs text-slate-500 font-medium">${{leave.mentor.name}}</div>
-          <div class="text-xs text-slate-700 font-semibold pt-1">Approved by: <span class="font-normal text-slate-600">${{leave.mentor.name}}</span></div>
-        </div>
-      ` : '';
+        `;
+      }} else {{
+        const wardenCard = leave.warden ? `
+          <div class="border border-slate-200/90 rounded-2xl p-4 bg-white shadow-sm space-y-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-bold text-slate-800 text-sm">Hostel Warden</span>
+              <span class="${{leave.warden.status === 'Approved' ? 'bg-[#16a34a]' : 'bg-[#ef4444]'}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm">${{leave.warden.status}}</span>
+            </div>
+            <div class="text-xs text-slate-500 font-medium">${{leave.warden.name}}</div>
+            <div class="text-xs text-slate-700 font-semibold pt-1">Approved by: <span class="font-normal text-slate-600">${{leave.warden.name}}</span></div>
+          </div>
+        ` : '';
 
-      const wardenApproval = leave.warden ? `
-        <div class="border border-slate-200/90 rounded-2xl p-4 bg-white shadow-sm space-y-1">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-bold text-slate-800 text-sm">Hostel Warden</span>
-            <span class="${{leave.warden.status === 'Approved' ? 'bg-[#16a34a]' : (leave.warden.status === 'Rejected' ? 'bg-[#ef4444]' : 'bg-[#f59e0b]')}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm">${{leave.warden.status}}</span>
+        const mentorCard = leave.mentor ? `
+          <div class="border border-slate-200/90 rounded-2xl p-4 bg-white shadow-sm space-y-1">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-bold text-slate-800 text-sm">Mentor</span>
+              <span class="${{leave.mentor.status === 'Approved' ? 'bg-[#16a34a]' : 'bg-[#ef4444]'}} text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm">${{leave.mentor.status}}</span>
+            </div>
+            <div class="text-xs text-slate-500 font-medium">${{leave.mentor.name}}</div>
+            <div class="text-xs text-slate-700 font-semibold pt-1">Approved by: <span class="font-normal text-slate-600">${{leave.mentor.name}}</span></div>
           </div>
-          <div class="text-xs text-slate-500 font-medium">${{leave.warden.name}}</div>
-          <div class="text-xs text-slate-700 font-semibold pt-1">Approved by: <span class="font-normal text-slate-600">${{leave.warden.name}}</span></div>
-        </div>
-      ` : '';
+        ` : '';
+
+        approvalHtml = `
+          <div class="space-y-2.5">
+            ${{wardenCard}}
+            ${{mentorCard}}
+          </div>
+        `;
+      }}
 
       const content = `
         <div class="space-y-4">
           <!-- Leave Information Subtitle -->
           <h4 class="text-sm font-bold text-slate-800 tracking-tight">Leave Information</h4>
 
-          <!-- Two-column grid -->
+          <!-- Two-column grid matching Frame 32 -->
           <div class="grid grid-cols-2 gap-y-3.5 gap-x-6 text-xs">
             <div>
               <span class="text-slate-500 block mb-0.5">Leave Type</span>
@@ -721,10 +1225,7 @@ html_content = f"""<!DOCTYPE html>
           <!-- Approval Status Section -->
           <div class="pt-2">
             <h4 class="text-sm font-bold text-slate-800 tracking-tight mb-2.5">Approval Status</h4>
-            <div class="space-y-2.5">
-              ${{mentorApproval}}
-              ${{wardenApproval}}
-            </div>
+            ${{approvalHtml}}
           </div>
         </div>
       `;
@@ -734,118 +1235,73 @@ html_content = f"""<!DOCTYPE html>
       `);
     }}
 
-    // Open Working Apply Leave Form Modal
+    // Open Working Apply for Leave Form Modal matching Reference Video exactly
     function openApplyLeaveModal() {{
-      const todayIso = "2026-10-08T16:30";
-      const nextIso = "2026-10-12T08:30";
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      const todayIso = `${{now.getFullYear()}}-${{pad(now.getMonth()+1)}}-${{pad(now.getDate())}}T09:00`;
+      const nextDate = new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000);
+      const nextIso = `${{nextDate.getFullYear()}}-${{pad(nextDate.getMonth()+1)}}-${{pad(nextDate.getDate())}}T17:00`;
 
       const content = `
-        <form id="applyLeaveForm" class="space-y-4 text-xs">
-          <div class="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
-            <div class="w-9 h-9 rounded-full bg-[#534AB7] text-white flex items-center justify-center font-bold text-xs ring-2 ring-violet-200">KS</div>
-            <div>
-              <div class="font-bold text-slate-800">KARTHIKEYAN S (2024UCS1132)</div>
-              <div class="text-[11px] text-slate-500">Computer Science & Engineering · III Year · Resident</div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">Leave Type <span class="text-red-500">*</span></label>
-              <select id="formLeaveType" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-primary font-medium">
-                <option value="Leave">Leave (Home / Casual Leave)</option>
-                <option value="Sick Leave">Sick Leave (Medical / Illness)</option>
-                <option value="GP">GP (Gate Pass / Day Outing)</option>
-                <option value="OD">OD (On Duty / Official)</option>
+        <form id="applyLeaveForm" class="space-y-4 text-xs font-sans" onsubmit="return false;">
+          <div>
+            <label class="block font-semibold text-slate-800 mb-1.5 text-sm">Leave Type</label>
+            <div class="relative">
+              <select id="formLeaveType" class="w-full px-4 py-2.5 bg-[#f0f4f9] border border-slate-200 focus:border-[#7D53F6] rounded-xl text-sm font-medium text-slate-800 focus:outline-none appearance-none cursor-pointer pr-10">
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Emergency Leave">Emergency Leave</option>
+                <option value="OnDuty - Events">OnDuty - Events</option>
+                <option value="OnDuty - Project Competition">OnDuty - Project Competition</option>
+                <option value="OnDuty - Internship">OnDuty - Internship</option>
+                <option value="OnDuty - Paper Presenation">OnDuty - Paper Presenation</option>
+                <option value="OnDuty - Technical Competition">OnDuty - Technical Competition</option>
+                <option value="OnDuty - NSS/NCC">OnDuty - NSS/NCC</option>
+                <option value="OnDuty - Sports">OnDuty - Sports</option>
+                <option value="OnDuty - NPTEL Exam">OnDuty - NPTEL Exam</option>
+                <option value="OnDuty - Offcampus Placement">OnDuty - Offcampus Placement</option>
+                <option value="Onduty - Training Course">Onduty - Training Course</option>
+                <option value="Onduty - Govt Exams">Onduty - Govt Exams</option>
+                <option value="GP">GP</option>
+                <option value="Leave" selected>Leave</option>
               </select>
-            </div>
-            <div>
-              <label class="block font-bold text-slate-700 mb-1">Type Category</label>
-              <div class="py-2">
-                <span class="bg-[#0284c7] text-white text-xs px-3.5 py-1 rounded-full font-semibold shadow-sm">Leave</span>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                <i class="bx bx-chevron-down text-xl"></i>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-3.5">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">From Date & Time <span class="text-red-500">*</span></label>
-              <input type="datetime-local" id="formFromDate" value="${{todayIso}}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-primary font-medium">
+              <label class="block font-semibold text-slate-800 mb-1.5 text-sm">From Date</label>
+              <input type="datetime-local" id="formFromDate" value="${{todayIso}}" class="w-full px-3 py-2 bg-[#f0f4f9] border border-slate-200 rounded-xl text-xs text-slate-800 font-medium focus:outline-none focus:border-[#7D53F6]">
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-1">To Date & Time <span class="text-red-500">*</span></label>
-              <input type="datetime-local" id="formToDate" value="${{nextIso}}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-primary font-medium">
+              <label class="block font-semibold text-slate-800 mb-1.5 text-sm">To Date</label>
+              <input type="datetime-local" id="formToDate" value="${{nextIso}}" class="w-full px-3 py-2 bg-[#f0f4f9] border border-slate-200 rounded-xl text-xs text-slate-800 font-medium focus:outline-none focus:border-[#7D53F6]">
             </div>
-          </div>
-
-          <div class="flex items-center justify-between bg-violet-50/70 border border-violet-100 p-2.5 rounded-xl">
-            <span class="text-slate-600 font-medium">Calculated Duration:</span>
-            <span id="formDurationText" class="font-bold text-primary text-xs">4 days</span>
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Remarks / Reason <span class="text-red-500">*</span></label>
-            <textarea id="formRemarks" rows="2" placeholder="Specify your reason for leave (e.g. Home visit, Medical rest, Family function)..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:outline-primary placeholder:text-slate-400 font-sans"></textarea>
+            <label class="block font-semibold text-slate-800 mb-1.5 text-sm">Remarks</label>
+            <input type="text" id="formRemarks" placeholder="Enter reason for leave" class="w-full px-3.5 py-2.5 bg-[#f0f4f9] border border-slate-200 focus:border-[#7D53F6] rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none font-medium">
           </div>
-
-          <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 text-[11px] space-y-1">
-            <div class="text-slate-500 font-bold mb-1 uppercase tracking-wider">Approval Routing Hierarchy:</div>
-            <div class="flex justify-between text-slate-700"><span>1. Faculty Mentor:</span><span class="font-semibold text-slate-800">CS10789 - Dhivya P</span></div>
-            <div class="flex justify-between text-slate-700"><span>2. Hostel Warden:</span><span class="font-semibold text-slate-800">ME11077 - josephsilvester</span></div>
-          </div>
-
-          <label class="flex items-start gap-2 text-xs text-slate-600 cursor-pointer pt-1">
-            <input type="checkbox" id="formConsentCheck" checked class="mt-0.5 rounded text-primary focus:ring-primary">
-            <span>Parent / Guardian has been communicated with and given full consent.</span>
-          </label>
         </form>
       `;
 
-      openModal("Apply Leave", content, `
-        <button onclick="closeModal()" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50">Cancel</button>
-        <button id="submitLeaveBtn" type="button" class="px-5 py-2 rounded-xl text-xs font-semibold bg-[#7D53F6] hover:bg-[#6c42e6] text-white shadow-sm flex items-center gap-1.5 cursor-pointer">
-          <i class="bx bx-check text-base"></i> Submit Leave Application
-        </button>
+      openModal("Apply for Leave", content, `
+        <div class="w-full grid grid-cols-2 gap-3">
+          <button onclick="closeModal()" type="button" class="w-full py-2.5 rounded-xl font-bold bg-[#ff5757] hover:bg-[#ef4444] text-white text-sm shadow-sm transition-all text-center cursor-pointer">Cancel</button>
+          <button id="submitLeaveBtn" type="button" class="w-full py-2.5 rounded-xl font-bold bg-[#6366f1] hover:bg-[#5356e1] text-white text-sm shadow-sm transition-all text-center cursor-pointer">Submit Leave Request</button>
+        </div>
       `);
-
-      // Live duration calculation on date change
-      const fromEl = document.getElementById("formFromDate");
-      const toEl = document.getElementById("formToDate");
-      const durText = document.getElementById("formDurationText");
-
-      function updateDuration() {{
-        if (!fromEl || !toEl || !durText) return;
-        const d1 = new Date(fromEl.value);
-        const d2 = new Date(toEl.value);
-        if (isNaN(d1) || isNaN(d2) || d2 <= d1) {{
-          durText.innerText = "Invalid Date Range";
-          return;
-        }}
-        const diffMs = d2 - d1;
-        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        durText.innerText = `${{diffDays}} ${{diffDays === 1 ? 'day' : 'days'}}`;
-      }}
-
-      fromEl?.addEventListener("change", updateDuration);
-      toEl?.addEventListener("change", updateDuration);
 
       // Handle Submit
       document.getElementById("submitLeaveBtn")?.addEventListener("click", () => {{
         const leaveType = document.getElementById("formLeaveType")?.value || "Leave";
         const fromVal = document.getElementById("formFromDate")?.value;
         const toVal = document.getElementById("formToDate")?.value;
-        const remarksVal = document.getElementById("formRemarks")?.value.trim();
-        const consent = document.getElementById("formConsentCheck")?.checked;
-
-        if (!remarksVal) {{
-          showToast("Please enter remarks / reason for your leave.");
-          document.getElementById("formRemarks")?.focus();
-          return;
-        }}
-        if (!consent) {{
-          showToast("Please confirm parent / guardian consent.");
-          return;
-        }}
+        const remarksVal = document.getElementById("formRemarks")?.value.trim() || "Leave";
 
         const d1 = new Date(fromVal);
         const d2 = new Date(toVal);
@@ -876,13 +1332,12 @@ html_content = f"""<!DOCTYPE html>
           warden: {{ name: "ME11077 - josephsilvester", status: "Pending" }}
         }};
 
-        // Add to leaves list at the beginning
         leavesData.unshift(newLeave);
+        leavesCurrentPage = 1;
 
         closeModal();
-        showToast(`✅ Leave application submitted! Notification sent to Mentor (CS10789 - Dhivya P).`);
+        showToast("Leave request submitted successfully!");
 
-        // Re-render table if on leaves view
         if (currentView === "leaves") {{
           renderLeavesTable();
         }} else {{
@@ -891,7 +1346,7 @@ html_content = f"""<!DOCTYPE html>
       }});
     }}
 
-    // Switch View function
+    // Switch View function with realistic transition
     let currentView = "dashboard";
     const container = document.getElementById("contentContainer");
 
@@ -912,9 +1367,21 @@ html_content = f"""<!DOCTYPE html>
         if (target === viewName) {{
           item.className = "nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white bg-primary text-white transition-all shadow-sm";
         }} else if (target === "logout") {{
-          item.className = "nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-red-600 hover:text-white text-iconColor transition-all mt-auto";
+          item.className = "nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-red-600 hover:text-white text-iconColor transition-all";
         }} else {{
           item.className = "nav-item group flex gap-2 items-center p-2.5 rounded-xl cursor-pointer hover:bg-primary hover:text-white text-iconColor transition-all";
+        }}
+      }});
+
+      // Update mobile dock buttons active status
+      document.querySelectorAll("[data-mobile-nav]").forEach(btn => {{
+        const target = btn.getAttribute("data-mobile-nav");
+        if (target === viewName) {{
+          btn.style.boxShadow = "0 0 0 2px rgba(125, 83, 246, 0.5)";
+          btn.style.transform = "scale(1.05)";
+        }} else {{
+          btn.style.boxShadow = "none";
+          btn.style.transform = "scale(1)";
         }}
       }});
 
@@ -925,9 +1392,25 @@ html_content = f"""<!DOCTYPE html>
       container.innerHTML = VIEWS[viewName];
       container.scrollTop = 0;
 
-      // Update Hash without jumping
+      // Update Hash
       if (location.hash !== "#" + viewName) {{
         history.replaceState(null, "", "#" + viewName);
+      }}
+
+      // If switching to leaves, show brief spinner transition matching video (Frame 52)
+      if (viewName === "leaves") {{
+        const loader = document.getElementById("leavesLoadingState");
+        const content = document.getElementById("leavesMainContent");
+        if (loader && content) {{
+          loader.classList.remove("hidden");
+          loader.classList.add("flex");
+          content.classList.add("hidden");
+          setTimeout(() => {{
+            loader.classList.add("hidden");
+            loader.classList.remove("flex");
+            content.classList.remove("hidden");
+          }}, 350);
+        }}
       }}
 
       // Attach View-specific event handlers
@@ -945,7 +1428,17 @@ html_content = f"""<!DOCTYPE html>
         // Search input filter
         const searchInput = document.getElementById("leavesSearchInput");
         searchInput?.addEventListener("input", (e) => {{
-          renderLeavesTable(e.target.value);
+          leavesSearchFilter = e.target.value;
+          leavesCurrentPage = 1;
+          renderLeavesTable();
+        }});
+
+        // Entries per page select
+        const perPageSelect = document.getElementById("leavesPerPageSelect");
+        perPageSelect?.addEventListener("change", (e) => {{
+          leavesPageSize = Number(e.target.value);
+          leavesCurrentPage = 1;
+          renderLeavesTable();
         }});
 
         // Filter icons
@@ -955,13 +1448,13 @@ html_content = f"""<!DOCTYPE html>
             const col = icon.getAttribute("data-col");
             openModal(`Filter by ${{col}}`, `
               <div class="space-y-2 text-xs">
-                <button onclick="renderLeavesTable(''); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">All Records</button>
-                <button onclick="renderLeavesTable('Leave'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Leave Only</button>
-                <button onclick="renderLeavesTable('GP'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">GP Only</button>
-                <button onclick="renderLeavesTable('Sick Leave'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Sick Leave Only</button>
-                <button onclick="renderLeavesTable('Approved'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Approved Only</button>
-                <button onclick="renderLeavesTable('Completed'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Completed Only</button>
-                <button onclick="renderLeavesTable('Rejected'); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Rejected Only</button>
+                <button onclick="leavesSearchFilter=''; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">All Records</button>
+                <button onclick="leavesSearchFilter='Leave'; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Leave Only</button>
+                <button onclick="leavesSearchFilter='GP'; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">GP Only</button>
+                <button onclick="leavesSearchFilter='Sick Leave'; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Sick Leave Only</button>
+                <button onclick="leavesSearchFilter='Approved'; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Approved Only</button>
+                <button onclick="leavesSearchFilter='Completed'; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Completed Only</button>
+                <button onclick="leavesSearchFilter='Rejected'; leavesCurrentPage=1; renderLeavesTable(); closeModal();" class="w-full text-left p-2 rounded-lg hover:bg-slate-100 font-medium">Rejected Only</button>
               </div>
             `);
           }});
@@ -973,11 +1466,11 @@ html_content = f"""<!DOCTYPE html>
         const buttons = container.querySelectorAll("button");
         buttons.forEach(btn => {{
           const txt = btn.innerText || "";
-          if (txt.includes("Activity Points") || txt.includes("46,690")) {{
+          if (txt.includes("Activity Points") || txt.includes("47,730")) {{
             btn.addEventListener("click", openActivityBreakdown);
           }} else if (txt.includes("Opportunity Points") || txt.includes("460")) {{
             btn.addEventListener("click", openOpportunityBreakdown);
-          }} else if (txt.includes("Responsive Score") || txt.includes("83")) {{
+          }} else if (txt.includes("Responsive Score") || txt.includes("84")) {{
             btn.addEventListener("click", openResponsiveBreakdown);
           }}
         }});
@@ -1023,8 +1516,8 @@ html_content = f"""<!DOCTYPE html>
           if (btn.innerText.includes("Jump to Today")) {{
             btn.addEventListener("click", () => {{
               const schedHeader = container.querySelector('[data-dashboard-section="schedule"] .text-\\\\[11px\\\\].font-medium');
-              if (schedHeader) schedHeader.innerText = "Tue 6 Oct 2026";
-              showToast("Jumped to Today: Tue 6 Oct 2026");
+              if (schedHeader) schedHeader.innerText = "Fri 9 Oct 2026";
+              showToast("Jumped to Today: Fri 9 Oct 2026");
             }});
           }}
           if (btn.innerText.trim() === "day" || btn.innerText.trim() === "week") {{
@@ -1042,29 +1535,9 @@ html_content = f"""<!DOCTYPE html>
       }}
 
       if (viewName === "courses" || viewName === "my-course") {{
-        const titleHeading = container.querySelector("h3.text-xl");
-        if (titleHeading && !container.querySelector("#courseSearchBar")) {{
-          const searchDiv = document.createElement("div");
-          searchDiv.className = "my-4 flex flex-col sm:flex-row gap-3 items-center justify-between";
-          searchDiv.innerHTML = `
-            <div class="relative w-full sm:w-80">
-              <i class="bx bx-search absolute left-3 top-2.5 text-slate-400 text-lg"></i>
-              <input id="courseSearchBar" type="text" placeholder="Search courses (e.g. C++, AI, DBMS)..." 
-                class="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-primary placeholder:text-slate-400">
-            </div>
-            <div class="flex gap-1.5 flex-wrap w-full sm:w-auto">
-              <button class="course-chip px-3 py-1 rounded-lg text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 filter-chip active" data-level="all">All (61)</button>
-              <button class="course-chip px-3 py-1 rounded-lg text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 filter-chip" data-level="Level 0">Level 0</button>
-              <button class="course-chip px-3 py-1 rounded-lg text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 filter-chip" data-level="Level 1">Level 1</button>
-              <button class="course-chip px-3 py-1 rounded-lg text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 filter-chip" data-level="Level 2">Level 2</button>
-              <button class="course-chip px-3 py-1 rounded-lg text-xs font-medium border border-slate-200 bg-white hover:bg-slate-50 filter-chip" data-level="Core">Core</button>
-            </div>
-          `;
-          titleHeading.parentElement.insertBefore(searchDiv, titleHeading.nextSibling);
-
-          const searchInput = document.getElementById("courseSearchBar");
+        const searchInput = container.querySelector("#courseSearchBar");
+        if (searchInput) {{
           const cards = container.querySelectorAll(".grid > div");
-
           function filterCourses() {{
             const query = searchInput.value.toLowerCase().trim();
             const activeChip = container.querySelector(".course-chip.active")?.getAttribute("data-level") || "all";
@@ -1075,8 +1548,7 @@ html_content = f"""<!DOCTYPE html>
               card.style.display = matchesQuery && matchesLevel ? "flex" : "none";
             }});
           }}
-
-          searchInput?.addEventListener("input", filterCourses);
+          searchInput.addEventListener("input", filterCourses);
           container.querySelectorAll(".course-chip").forEach(chip => {{
             chip.addEventListener("click", function() {{
               container.querySelectorAll(".course-chip").forEach(c => c.classList.remove("active"));
@@ -1086,7 +1558,6 @@ html_content = f"""<!DOCTYPE html>
           }});
         }}
 
-        // Course card clicks
         container.querySelectorAll(".grid > div").forEach(card => {{
           card.addEventListener("click", () => {{
             const cTitle = card.querySelector("h3")?.innerText || "Course";
@@ -1113,28 +1584,14 @@ html_content = f"""<!DOCTYPE html>
       }}
 
       if (viewName === "practice") {{
-        const titleArea = container.querySelector(".mb-4");
-        if (titleArea && !container.querySelector("#practiceSearchBar")) {{
-          const pSearch = document.createElement("div");
-          pSearch.className = "w-full my-3";
-          pSearch.innerHTML = `
-            <div class="relative w-full max-w-sm">
-              <i class="bx bx-search absolute left-3 top-2.5 text-slate-400 text-lg"></i>
-              <input id="practiceSearchBar" type="text" placeholder="Filter practice courses (e.g. DBMS, Verbal)..." 
-                class="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-primary placeholder:text-slate-400">
-            </div>
-          `;
-          titleArea.appendChild(pSearch);
-
-          const input = document.getElementById("practiceSearchBar");
-          const pCards = container.querySelectorAll(".grid > div");
-          input?.addEventListener("input", (e) => {{
-            const val = e.target.value.toLowerCase().trim();
-            pCards.forEach(c => {{
-              c.style.display = (!val || c.innerText.toLowerCase().includes(val)) ? "flex" : "none";
-            }});
+        const input = document.getElementById("practiceSearchBar");
+        const pCards = container.querySelectorAll(".grid > div");
+        input?.addEventListener("input", (e) => {{
+          const val = e.target.value.toLowerCase().trim();
+          pCards.forEach(c => {{
+            c.style.display = (!val || c.innerText.toLowerCase().includes(val)) ? "flex" : "none";
           }});
-        }}
+        }});
 
         container.querySelectorAll(".grid > div").forEach(card => {{
           card.addEventListener("click", () => {{
@@ -1148,9 +1605,6 @@ html_content = f"""<!DOCTYPE html>
                   <span class="text-xs font-bold text-primary">${{pPct}} Completed</span>
                 </div>
                 <p class="text-xs text-slate-600">Practice questions are aligned with company recruitment standards and Technical Assessment frameworks.</p>
-                <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl text-blue-800 text-xs">
-                  Timed test with automatic code reviewer and test-case verification.
-                </div>
               </div>
             `, `
               <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-medium border border-slate-200 text-slate-600">Cancel</button>
@@ -1205,30 +1659,60 @@ html_content = f"""<!DOCTYPE html>
           }});
         }}
 
+        // Click row opens exact Rubric Review Modal matching Frame 55 & 36
         rows.forEach(row => {{
           row.addEventListener("click", () => {{
             const cells = row.querySelectorAll("td");
             if (cells.length >= 4) {{
-              const cName = cells[1].innerText;
-              const slot = cells[2].innerText;
-              const comment = cells[3].innerText || "No additional reviewer comments recorded.";
-              const status = cells[4].innerText;
-              openModal(`Review Details: ${{cName}}`, `
-                <div class="space-y-3 text-xs">
-                  <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <div>
-                      <div class="font-bold text-slate-900">${{cName}}</div>
-                      <div class="text-slate-500 mt-0.5">${{slot}}</div>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[11px]">${{status}}</span>
+              const cName = cells[1].innerText.trim();
+              const slot = cells[2].innerText.trim();
+              const comment = cells[3].innerText.trim();
+
+              const known = reviewData[cName] || {{}};
+              const actualSlot = known.slot || slot;
+              const actualJustification = known.justification || comment || "The submitted solution was verified against required test cases and rubric criteria.";
+              const rubrics = known.rubrics || [
+                {{ label: "Code Quality", score: "30/40" }},
+                {{ label: "Key Requirements", score: "20/25" }},
+                {{ label: "Expected Output", score: "30/35" }}
+              ];
+
+              const rubricsHtml = rubrics.map(r => `
+                <tr class="border-b border-slate-100">
+                  <td class="py-2.5 px-3 font-medium text-slate-800">${{r.label}}</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">${{r.score}}</td>
+                </tr>
+              `).join("");
+
+              openModal(cName, `
+                <div class="space-y-4 text-xs">
+                  <div>
+                    <h5 class="font-bold text-slate-800 mb-1">Slot</h5>
+                    <p class="text-slate-600 font-medium">${{actualSlot}}</p>
                   </div>
                   <div>
-                    <h5 class="font-bold text-slate-700 uppercase tracking-wider text-[11px] mb-1">Reviewer Feedback:</h5>
-                    <div class="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 text-amber-900 leading-relaxed font-mono">
-                      ${{comment}}
+                    <h5 class="font-bold text-slate-800 mb-1">Justification</h5>
+                    <p class="text-slate-600 leading-relaxed font-sans">${{actualJustification}}</p>
+                  </div>
+                  <div>
+                    <h5 class="font-bold text-slate-800 mb-1.5">Rubric Scores</h5>
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                      <table class="w-full text-left border-collapse">
+                        <thead>
+                          <tr class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                            <th class="py-2 px-3">Label</th>
+                            <th class="py-2 px-3">Score</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${{rubricsHtml}}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
+              `, `
+                <button onclick="closeModal()" class="w-full py-2.5 rounded-xl font-semibold bg-[#7D53F6] hover:bg-[#6c42e6] text-white text-sm transition-all shadow-sm">Close</button>
               `);
             }}
           }});
@@ -1262,4 +1746,4 @@ html_content = f"""<!DOCTYPE html>
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print(f"Generated index.html with My Leaves & Apply Leave successfully ({len(html_content)} bytes)")
+print(f"Generated index.html successfully ({len(html_content)} bytes)")
