@@ -206,7 +206,7 @@ html_content = f"""<!DOCTYPE html>
     const VIEWS = {views_js};
 
     // Full Leaves Dataset matching Video (31 entries)
-    let leavesData = [
+    const DEFAULT_LEAVES = [
       {{
         id: 1,
         leaveType: "Leave",
@@ -219,8 +219,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Oct 4, 2026, 07:52 PM",
         duration: "4 days",
         remarks: "Leave",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -236,8 +236,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Sep 29, 2026, 08:44 PM",
         duration: "6 days",
         remarks: "GP",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
       {{
@@ -252,7 +252,7 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "1 day",
         remarks: "Stomach upset",
-        parentStatus: "Pending",
+        parentStatus: "Approved",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -269,7 +269,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "3 days",
         remarks: "Leave",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -285,8 +285,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Aug 28, 2026, 07:22 AM",
         duration: "6 days",
         remarks: "Leave",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -302,8 +302,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Aug 16, 2026, 07:06 PM",
         duration: "6 days",
         remarks: "Leave",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -319,9 +319,9 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "2 days",
         remarks: "Leave",
-        parentStatus: "-",
-        status: "Rejected",
-        mentor: {{ name: "CS10789 - Dhivya P", status: "Rejected" }}
+        parentStatus: "Approved",
+        status: "Approved",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }}
       }},
       {{
         id: 8,
@@ -335,8 +335,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Aug 9, 2026, 03:41 PM",
         duration: "1 day",
         remarks: "Leave",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
       {{
@@ -351,9 +351,9 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "2 days",
         remarks: "Leave",
-        parentStatus: "-",
-        status: "Rejected",
-        mentor: {{ name: "CS10789 - Dhivya P", status: "Rejected" }}
+        parentStatus: "Approved",
+        status: "Approved",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }}
       }},
       {{
         id: 10,
@@ -367,7 +367,7 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "1 day",
         remarks: "Fever",
-        parentStatus: "Pending",
+        parentStatus: "Approved",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -384,7 +384,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "4 days",
         remarks: "Home visit",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -400,8 +400,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Jul 18, 2026, 06:40 PM",
         duration: "1 day",
         remarks: "Outing",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
       {{
@@ -417,7 +417,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "1 day",
         remarks: "Exam Center: Coimbatore",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -433,7 +433,7 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "1 day",
         remarks: "Severe headache",
-        parentStatus: "Pending",
+        parentStatus: "Approved",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -450,7 +450,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "5 days",
         remarks: "Leave",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -466,8 +466,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Jun 05, 2026, 07:45 PM",
         duration: "1 day",
         remarks: "GP Outing",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
       {{
@@ -483,7 +483,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "4 days",
         remarks: "Family emergency",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -499,9 +499,9 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "2 days",
         remarks: "Personal",
-        parentStatus: "-",
-        status: "Rejected",
-        mentor: {{ name: "CS10789 - Dhivya P", status: "Rejected" }}
+        parentStatus: "Approved",
+        status: "Approved",
+        mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }}
       }},
       {{
         id: 19,
@@ -516,7 +516,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "2 days",
         remarks: "Zonal Tournament",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -533,7 +533,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "4 days",
         remarks: "Tamil New Year Holiday",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -549,7 +549,7 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "1 day",
         remarks: "Clinic rest",
-        parentStatus: "Pending",
+        parentStatus: "Approved",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -565,8 +565,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Mar 22, 2026, 07:10 PM",
         duration: "1 day",
         remarks: "GP Outing",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
       {{
@@ -581,8 +581,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Mar 13, 2026, 07:50 PM",
         duration: "4 days",
         remarks: "Leave",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -599,7 +599,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "2 days",
         remarks: "Hackathon Finals",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -616,7 +616,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "3 days",
         remarks: "Leave",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -632,7 +632,7 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "1 day",
         remarks: "Dental appointment",
-        parentStatus: "Pending",
+        parentStatus: "Approved",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -649,7 +649,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "3 days",
         remarks: "Republic Day Long Weekend",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -666,7 +666,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "7 days",
         remarks: "Pongal Vacation",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -682,8 +682,8 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "Jan 03, 2026, 06:50 PM",
         duration: "1 day",
         remarks: "Shopping",
-        parentStatus: "Pending",
-        status: "Completed",
+        parentStatus: "Approved",
+        status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
       {{
@@ -699,7 +699,7 @@ html_content = f"""<!DOCTYPE html>
         duration: "5 days",
         remarks: "Winter break",
         parentStatus: "Approved",
-        status: "Completed",
+        status: "Approved",
         mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }},
@@ -715,13 +715,30 @@ html_content = f"""<!DOCTYPE html>
         gateIn: "-",
         duration: "1 day",
         remarks: "Cold & viral fever",
-        parentStatus: "Pending",
+        parentStatus: "Approved",
         status: "Approved",
         warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
       }}
     ];
 
-    let leavesCurrentPage = 1;
+
+    const STORAGE_KEY = "pcdp_leaves_records_v3";
+    let leavesData = [];
+    try {{
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {{
+        leavesData = JSON.parse(stored);
+      }}
+    }} catch(e) {{
+      console.error("Error loading stored leaves:", e);
+    }}
+    if (!leavesData || !Array.isArray(leavesData) || leavesData.length === 0) {{
+      leavesData = DEFAULT_LEAVES;
+      try {{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(leavesData));
+      }} catch(e) {{}}
+    }}
+        let leavesCurrentPage = 1;
     let leavesPageSize = 10;
     let leavesSearchFilter = "";
 
@@ -1021,26 +1038,20 @@ html_content = f"""<!DOCTYPE html>
     // LEAVES SYSTEM (Exact Video Replication)
     // ==========================================
     function getStatusBadge(status) {{
-      if (status === "Completed") {{
-        return `<span class="bg-[#15803d] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Completed</span>`;
-      }}
-      if (status === "Approved") {{
-        return `<span class="bg-[#16a34a] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Approved</span>`;
-      }}
       if (status === "Rejected") {{
         return `<span class="bg-[#ef4444] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Rejected</span>`;
       }}
-      return `<span class="bg-[#f59e0b] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Pending</span>`;
+      if (status === "Pending") {{
+        return `<span class="bg-[#f59e0b] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Pending</span>`;
+      }}
+      return `<span class="bg-[#16a34a] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Approved</span>`;
     }}
 
     function getParentStatusBadge(status) {{
       if (status === "Pending") {{
         return `<span class="bg-[#f59e0b] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Pending</span>`;
       }}
-      if (status === "Approved") {{
-        return `<span class="bg-[#16a34a] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Approved</span>`;
-      }}
-      return `<span class="text-slate-400 font-medium">-</span>`;
+      return `<span class="bg-[#16a34a] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">Approved</span>`;
     }}
 
     function renderLeavesTable() {{
@@ -1065,7 +1076,7 @@ html_content = f"""<!DOCTYPE html>
       const pageSlice = filtered.slice(startIdx, endIdx);
 
       if (pageSlice.length === 0) {{
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400 text-sm">No leave records match your search criteria.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-400 text-sm">No leave records match your search criteria.</td></tr>`;
       }} else {{
         tbody.innerHTML = pageSlice.map(leave => `
           <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer leave-row" data-id="${{leave.id}}">
@@ -1076,9 +1087,13 @@ html_content = f"""<!DOCTYPE html>
             <td class="py-3 px-4 whitespace-nowrap">
               <span class="bg-[#0284c7] text-white text-[11px] px-3 py-0.5 rounded-full font-semibold shadow-sm inline-block">${{leave.type}}</span>
             </td>
-            <td class="py-3 px-4 text-slate-600 whitespace-nowrap">${{leave.fromDate}}</td>
-            <td class="py-3 px-4 text-slate-600 whitespace-nowrap font-medium">${{leave.remarks}}</td>
-            <td class="py-3 px-4 text-center whitespace-nowrap">${{getParentStatusBadge(leave.parentStatus)}}</td>
+            <td class="py-3 px-4 text-slate-700 whitespace-nowrap font-medium">${{leave.fromDate}}</td>
+            <td class="py-3 px-4 text-slate-700 whitespace-nowrap font-medium">
+              <div>${{leave.toDate}}</div>
+              ${{leave.gateIn && leave.gateIn !== '-' ? `<div class="text-[11px] text-slate-400 font-normal">(Gate In: ${{leave.gateIn}})</div>` : ''}}
+            </td>
+            <td class="py-3 px-4 text-slate-600 whitespace-nowrap font-medium">${{leave.duration}}</td>
+            <td class="py-3 px-4 text-slate-700 whitespace-nowrap font-medium">${{leave.remarks}}</td>
             <td class="py-3 px-4 text-center whitespace-nowrap">${{getStatusBadge(leave.status)}}</td>
           </tr>
         `).join("");
@@ -1261,9 +1276,9 @@ html_content = f"""<!DOCTYPE html>
       const content = `
         <form id="applyLeaveForm" class="space-y-4 text-xs font-sans" onsubmit="return false;">
           <div>
-            <label class="block font-semibold text-slate-800 mb-1.5 text-sm">Leave Type</label>
+            <label class="block font-semibold text-slate-700 mb-1.5 text-xs">Leave Type</label>
             <div class="relative">
-              <select id="formLeaveType" class="w-full px-4 py-2.5 bg-[#f0f4f9] border border-slate-200 focus:border-[#7D53F6] rounded-xl text-sm font-medium text-slate-800 focus:outline-none appearance-none cursor-pointer pr-10">
+              <select id="formLeaveType" class="w-full px-3.5 py-2.5 bg-[#f0f4f9] border border-slate-200 focus:border-[#7D53F6] rounded-xl text-xs sm:text-sm font-medium text-slate-800 focus:outline-none appearance-none cursor-pointer pr-10">
                 <option value="Sick Leave">Sick Leave</option>
                 <option value="Emergency Leave">Emergency Leave</option>
                 <option value="OnDuty - Events">OnDuty - Events</option>
@@ -1280,25 +1295,26 @@ html_content = f"""<!DOCTYPE html>
                 <option value="GP">GP</option>
                 <option value="Leave" selected>Leave</option>
               </select>
-              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
-                <i class="bx bx-chevron-down text-xl"></i>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                <div class="h-4 w-[1px] bg-slate-300 mr-2.5"></div>
+                <i class="bx bx-chevron-down text-xl text-slate-500"></i>
               </div>
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3.5">
             <div>
-              <label class="block font-semibold text-slate-800 mb-1.5 text-sm">From Date</label>
+              <label class="block font-semibold text-slate-700 mb-1.5 text-xs">From Date</label>
               <input type="datetime-local" id="formFromDate" value="${{todayIso}}" class="w-full px-3 py-2 bg-[#f0f4f9] border border-slate-200 rounded-xl text-xs text-slate-800 font-medium focus:outline-none focus:border-[#7D53F6]">
             </div>
             <div>
-              <label class="block font-semibold text-slate-800 mb-1.5 text-sm">To Date</label>
+              <label class="block font-semibold text-slate-700 mb-1.5 text-xs">To Date</label>
               <input type="datetime-local" id="formToDate" value="${{nextIso}}" class="w-full px-3 py-2 bg-[#f0f4f9] border border-slate-200 rounded-xl text-xs text-slate-800 font-medium focus:outline-none focus:border-[#7D53F6]">
             </div>
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-800 mb-1.5 text-sm">Remarks</label>
+            <label class="block font-semibold text-slate-700 mb-1.5 text-xs">Remarks</label>
             <input type="text" id="formRemarks" placeholder="Enter reason for leave" class="w-full px-3.5 py-2.5 bg-[#f0f4f9] border border-slate-200 focus:border-[#7D53F6] rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none font-medium">
           </div>
         </form>
@@ -1306,21 +1322,22 @@ html_content = f"""<!DOCTYPE html>
 
       openModal("Apply for Leave", content, `
         <div class="w-full grid grid-cols-2 gap-3">
-          <button onclick="closeModal()" type="button" class="w-full py-2.5 rounded-xl font-bold bg-[#ff5757] hover:bg-[#ef4444] text-white text-sm shadow-sm transition-all text-center cursor-pointer">Cancel</button>
-          <button id="submitLeaveBtn" type="button" class="w-full py-2.5 rounded-xl font-bold bg-[#6366f1] hover:bg-[#5356e1] text-white text-sm shadow-sm transition-all text-center cursor-pointer">Submit Leave Request</button>
+          <button onclick="closeModal()" type="button" class="w-full py-3 rounded-xl font-bold bg-[#ff5c5c] hover:bg-[#ff4747] text-white text-sm shadow-sm transition-all text-center cursor-pointer">Cancel</button>
+          <button id="submitLeaveBtn" type="button" class="w-full py-2.5 rounded-xl font-bold bg-[#7452fc] hover:bg-[#633ff0] text-white text-xs sm:text-sm leading-tight shadow-sm transition-all text-center flex items-center justify-center cursor-pointer"><span>Submit Leave<br class="sm:hidden"> Request</span></button>
         </div>
       `);
 
-      // Handle Submit
+      // Handle Submit with automatic approval and backend localStorage persistence
       document.getElementById("submitLeaveBtn")?.addEventListener("click", () => {{
         const leaveType = document.getElementById("formLeaveType")?.value || "Leave";
-        const fromVal = document.getElementById("formFromDate")?.value;
-        const toVal = document.getElementById("formToDate")?.value;
-        const remarksVal = document.getElementById("formRemarks")?.value.trim() || "Leave";
+        const fromVal = document.getElementById("formFromDate")?.value || todayIso;
+        const toVal = document.getElementById("formToDate")?.value || nextIso;
+        const remarksVal = document.getElementById("formRemarks")?.value.trim() || leaveType;
 
         const d1 = new Date(fromVal);
         const d2 = new Date(toVal);
-        const diffDays = Math.max(1, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+        const diffMs = Math.max(0, d2 - d1);
+        const diffDays = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
         const durationStr = `${{diffDays}} ${{diffDays === 1 ? 'day' : 'days'}}`;
 
         const options = {{ month: 'short', day: 'numeric', year: 'numeric' }};
@@ -1329,6 +1346,7 @@ html_content = f"""<!DOCTYPE html>
         const fromFormattedTime = d1.toLocaleTimeString('en-US', {{ hour: '2-digit', minute: '2-digit' }});
         const toFormattedTime = d2.toLocaleTimeString('en-US', {{ hour: '2-digit', minute: '2-digit' }});
 
+        // Create new leave record with status Approved immediately
         const newLeave = {{
           id: Date.now(),
           leaveType: leaveType,
@@ -1341,17 +1359,26 @@ html_content = f"""<!DOCTYPE html>
           gateIn: "-",
           duration: durationStr,
           remarks: remarksVal,
-          parentStatus: "Pending",
-          status: "Pending",
-          mentor: {{ name: "CS10789 - Dhivya P", status: "Pending" }},
-          warden: {{ name: "ME11077 - josephsilvester", status: "Pending" }}
+          parentStatus: "Approved",
+          status: "Approved",
+          mentor: {{ name: "CS10789 - Dhivya P", status: "Approved" }},
+          warden: {{ name: "ME11077 - josephsilvester", status: "Approved" }}
         }};
 
+        // Prepend to leavesData array
         leavesData.unshift(newLeave);
+
+        // Persist to localStorage
+        try {{
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(leavesData));
+        }} catch(e) {{
+          console.error("Failed to save leave to localStorage:", e);
+        }}
+
         leavesCurrentPage = 1;
 
         closeModal();
-        showToast("Leave request submitted successfully!");
+        showToast("Leave request submitted and approved automatically!");
 
         if (currentView === "leaves") {{
           renderLeavesTable();
